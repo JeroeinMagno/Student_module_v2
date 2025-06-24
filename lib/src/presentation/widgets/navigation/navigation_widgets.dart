@@ -15,7 +15,6 @@ class AppBottomNavigation extends StatelessWidget {
     required this.onTap,
     required this.items,
   });
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -31,49 +30,65 @@ class AppBottomNavigation extends StatelessWidget {
         ),
       ),
       child: SafeArea(
-        child: Container(
-          height: 64.h,
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: items.asMap().entries.map((entry) {
-              final index = entry.key;
-              final item = entry.value;
-              final isSelected = index == currentIndex;
-              
-              return Expanded(
-                child: InkWell(
-                  onTap: () => onTap(index),
-                  borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          item.icon,
-                          size: 24.w,
-                          color: isSelected 
-                              ? AppTheme.primaryGreen
-                              : AppTheme.textSecondary,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isSmallScreen = constraints.maxWidth < 360.w;
+            final itemHeight = isSmallScreen ? 56.h : 64.h;
+            
+            return Container(
+              height: itemHeight,
+              padding: EdgeInsets.symmetric(
+                horizontal: isSmallScreen ? 8.w : 16.w,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: items.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final item = entry.value;
+                  final isSelected = index == currentIndex;
+                  
+                  return Expanded(
+                    child: InkWell(
+                      onTap: () => onTap(index),
+                      borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isSmallScreen ? 4.h : 8.h,
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          item.label,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: isSelected 
-                                ? AppTheme.primaryGreen
-                                : AppTheme.textSecondary,
-                          ),
-                          textAlign: TextAlign.center,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              item.icon,
+                              size: isSmallScreen ? 20.w : 24.w,
+                              color: isSelected 
+                                  ? AppTheme.primaryGreen
+                                  : AppTheme.textSecondary,
+                            ),
+                            SizedBox(height: isSmallScreen ? 2.h : 4.h),
+                            Flexible(
+                              child: Text(
+                                item.label,
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: isSelected 
+                                      ? AppTheme.primaryGreen
+                                      : AppTheme.textSecondary,
+                                  fontSize: isSmallScreen ? 10.sp : 12.sp,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
+                  );
+                }).toList(),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -239,45 +254,63 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onNotificationTap,
     this.onThemeToggle,
     this.isDarkMode = false,
-  });
-  @override
+  });  @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(title),
-      elevation: 0,
-      scrolledUnderElevation: 1,
-      actions: [
-        if (showFilter && onFilterTap != null)
-          AppIconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: onFilterTap,
-            tooltip: 'Filter',
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 360.w;
         
-        SizedBox(width: 8.w),
-        
-        if (onNotificationTap != null)
-          AppIconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: onNotificationTap,
-            tooltip: 'Notifications',
-          ),
-        
-        SizedBox(width: 8.w),
-        
-        if (onThemeToggle != null)
-          AppIconButton(
-            icon: Icon(
-              isDarkMode ? Icons.light_mode : Icons.dark_mode,
+        return AppBar(
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: isSmallScreen ? 18.sp : 20.sp,
+              fontWeight: FontWeight.w600,
             ),
-            onPressed: onThemeToggle,
-            tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
           ),
-        
-        if (actions != null) ...actions!,
-        
-        SizedBox(width: 16.w),
-      ],
+          elevation: 0,
+          scrolledUnderElevation: 1,
+          actions: [
+            if (showFilter && onFilterTap != null)
+              AppIconButton(
+                icon: Icon(
+                  Icons.filter_list,
+                  size: isSmallScreen ? 20.w : 24.w,
+                ),
+                onPressed: onFilterTap,
+                tooltip: 'Filter',
+              ),
+            
+            SizedBox(width: isSmallScreen ? 4.w : 8.w),
+            
+            if (onNotificationTap != null)
+              AppIconButton(
+                icon: Icon(
+                  Icons.notifications_outlined,
+                  size: isSmallScreen ? 20.w : 24.w,
+                ),
+                onPressed: onNotificationTap,
+                tooltip: 'Notifications',
+              ),
+            
+            SizedBox(width: isSmallScreen ? 4.w : 8.w),
+            
+            if (onThemeToggle != null)
+              AppIconButton(
+                icon: Icon(
+                  isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                  size: isSmallScreen ? 20.w : 24.w,
+                ),
+                onPressed: onThemeToggle,
+                tooltip: isDarkMode ? 'Light Mode' : 'Dark Mode',
+              ),
+            
+            if (actions != null) ...actions!,
+            
+            SizedBox(width: isSmallScreen ? 8.w : 16.w),
+          ],
+        );
+      },
     );
   }
 

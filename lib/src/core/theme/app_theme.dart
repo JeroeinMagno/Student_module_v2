@@ -12,20 +12,19 @@ class AppTheme {
   static const Color mutedLight = Color(0xFFF5F5F5);
   static const Color mutedDark = Color(0xFF262626);
   static const Color borderLight = Color(0xFFE5E5E5);
-  static const Color borderDark = Color(0xFF404040);
-  static const Color textPrimary = Color(0xFF0A0A0A);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color destructive = Color(0xFFEF4444);
-  static const Color success = Color(0xFF10B981);
-  static const Color warning = Color(0xFFF59E0B);
+  static const Color borderDark = Color(0xFF404040);  static const Color textPrimary = Color(0xFF000000);  // Black text for maximum contrast in light mode
+  static const Color textSecondary = Color(0xFF374151);  // Darker secondary text for better readability
+  static const Color destructive = Color(0xFFDC2626);  // Slightly darker red for better contrast
+  static const Color success = Color(0xFF059669);  // Adjusted green for better contrast
+  static const Color warning = Color(0xFFD97706);  // Adjusted warning color
 
-  // Chart colors
+  // Chart colors with better contrast
   static const List<Color> chartColors = [
-    Color(0xFF3B82F6), // chart-1
-    Color(0xFF10B981), // chart-2
-    Color(0xFFF59E0B), // chart-3
-    Color(0xFFEF4444), // chart-4
-    Color(0xFF8B5CF6), // chart-5
+    Color(0xFF2563EB),  // Darker blue
+    Color(0xFF059669),  // Darker green
+    Color(0xFFD97706),  // Darker amber
+    Color(0xFFDC2626),  // Darker red
+    Color(0xFF7C3AED),  // Darker purple
   ];
 
   // Border radius matching web (0.625rem = 10px)
@@ -52,7 +51,10 @@ class AppTheme {
         onBackground: textPrimary,
         onSurface: textPrimary,
         secondary: textSecondary,
-      ),      scaffoldBackgroundColor: backgroundLight,
+        onSurfaceVariant: textPrimary,
+        onSecondaryContainer: textPrimary,
+      ),
+      scaffoldBackgroundColor: backgroundLight,
       cardTheme: CardThemeData(
         color: cardLight,
         elevation: 0,
@@ -63,15 +65,17 @@ class AppTheme {
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: cardLight,
-        elevation: 0,
-        scrolledUnderElevation: 1,
         surfaceTintColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: textPrimary),
+        iconTheme: IconThemeData(color: textPrimary),
         titleTextStyle: GoogleFonts.inter(
           fontSize: 18.sp,
           fontWeight: FontWeight.w600,
           color: textPrimary,
         ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: cardLight,
+        surfaceTintColor: Colors.transparent,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: cardLight,
@@ -113,7 +117,10 @@ class AppTheme {
         onBackground: Colors.white,
         onSurface: Colors.white,
         secondary: textSecondary,
-      ),      scaffoldBackgroundColor: backgroundDark,
+        onSurfaceVariant: Colors.white70,
+        onSecondaryContainer: Colors.white,
+      ),
+      scaffoldBackgroundColor: backgroundDark,
       cardTheme: CardThemeData(
         color: cardDark,
         elevation: 0,
@@ -133,6 +140,10 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: cardDark,
+        surfaceTintColor: Colors.transparent,
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: cardDark,
@@ -156,9 +167,11 @@ class AppTheme {
       chipTheme: _buildChipTheme(Brightness.dark),
     );
   }
-
   static TextTheme _buildTextTheme(Brightness brightness) {
     final color = brightness == Brightness.light ? textPrimary : Colors.white;
+    final textSecondaryColor = brightness == Brightness.light 
+        ? textSecondary 
+        : Colors.white70;
     
     return TextTheme(
       displayLarge: GoogleFonts.inter(
@@ -220,36 +233,42 @@ class AppTheme {
         fontWeight: FontWeight.w400,
         color: color,
         height: 1.6,
+        letterSpacing: 0.15,
       ),
       bodyMedium: GoogleFonts.inter(
         fontSize: 14.sp,
         fontWeight: FontWeight.w400,
         color: color,
         height: 1.5,
+        letterSpacing: 0.15,
       ),
       bodySmall: GoogleFonts.inter(
         fontSize: 12.sp,
         fontWeight: FontWeight.w400,
-        color: textSecondary,
+        color: textSecondaryColor,
         height: 1.5,
+        letterSpacing: 0.15,
       ),
       labelLarge: GoogleFonts.inter(
         fontSize: 14.sp,
         fontWeight: FontWeight.w500,
         color: color,
         height: 1.4,
+        letterSpacing: 0.1,
       ),
       labelMedium: GoogleFonts.inter(
         fontSize: 12.sp,
         fontWeight: FontWeight.w500,
-        color: color,
+        color: textSecondaryColor,
         height: 1.4,
+        letterSpacing: 0.1,
       ),
       labelSmall: GoogleFonts.inter(
         fontSize: 10.sp,
         fontWeight: FontWeight.w500,
-        color: textSecondary,
+        color: textSecondaryColor,
         height: 1.4,
+        letterSpacing: 0.1,
       ),
     );
   }

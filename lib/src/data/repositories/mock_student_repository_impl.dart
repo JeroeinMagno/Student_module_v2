@@ -3,15 +3,16 @@ import '../../domain/entities/course.dart';
 import '../../domain/entities/chart_data.dart';
 import '../../domain/entities/assessment.dart';
 import '../../domain/repositories/student_repository.dart';
-import '../mock/mock_data_service.dart';
+import '../services/centralized_data_service.dart';
 
+/// Mock Student Repository Implementation
+/// Now uses CentralizedDataService for cleaner data management
 class MockStudentRepositoryImpl implements StudentRepository {
+  final CentralizedDataService _dataService = CentralizedDataService();
+
   @override
   Future<Student> getStudentInfo() async {
-    // Simulate network delay
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    final data = MockDataService.getStudentInfo();
+    final data = await _dataService.getStudentInfo();
     return Student(
       name: data['name'],
       srCode: data['srCode'],
@@ -21,62 +22,48 @@ class MockStudentRepositoryImpl implements StudentRepository {
 
   @override
   Future<List<Course>> getCourses() async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    final data = MockDataService.getCourseData();
+    final data = await _dataService.getCourses();
     return data.map((courseJson) => Course.fromJson(courseJson)).toList();
   }
 
   @override
   Future<Course> getCourseById(String id) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    
-    final courses = MockDataService.getCourseData();
-    final courseData = courses.firstWhere(
-      (course) => course['id'] == id,
-      orElse: () => courses.first,
-    );
-    
+    final courseData = await _dataService.getCourseById(id);
+    if (courseData == null) {
+      // Return first course as fallback (maintaining existing behavior)
+      final courses = await _dataService.getCourses();
+      return Course.fromJson(courses.first);
+    }
     return Course.fromJson(courseData);
   }
 
   @override
   Future<List<ChartData>> getChartData() async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    
-    final data = MockDataService.getChartData();
+    final data = await _dataService.getChartData();
     return data.map((item) => ChartData(
       month: item['month'],
-      desktop: item['desktop'],
+      desktop: (item['desktop'] as num).toDouble(),
     )).toList();
   }
 
   @override
   Future<List<Assessment>> getRecentAssessments() async {
-    await Future.delayed(const Duration(milliseconds: 600));
-    
-    final data = MockDataService.getRecentAssessments();
+    final data = await _dataService.getRecentAssessments();
     return data.map((assessmentJson) => Assessment.fromJson(assessmentJson)).toList();
   }
+
   @override
   Future<Map<String, double>> getPerformanceDistribution() async {
-    await Future.delayed(const Duration(milliseconds: 300));
-    
-    final data = MockDataService.getPerformanceDistribution();
-    return data.map((key, value) => MapEntry(key, (value as num).toDouble()));
+    return await _dataService.getPerformanceDistribution();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getGradeTrends() async {
-    await Future.delayed(const Duration(milliseconds: 400));
-    
-    return MockDataService.getGradeTrends();
+    return await _dataService.getGradeTrends();
   }
 
   @override
   Future<List<Map<String, dynamic>>> getAllExams() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    return MockDataService.getAllExams();
+    return await _dataService.getAllExams();
   }
 }

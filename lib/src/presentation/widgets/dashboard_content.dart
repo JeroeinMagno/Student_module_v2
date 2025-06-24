@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dashboard_chart_widgets.dart';
-import 'assessment_table.dart';
+import 'tables/table_widgets.dart' as ui;
 
-class DashboardContent extends ConsumerWidget {
+class DashboardContent extends StatelessWidget {
   const DashboardContent({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Determine if we should use tablet layout (width > 600px)
@@ -139,7 +138,12 @@ class DashboardContent extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
                 ),
               ),
-              child: const AssessmentTable(),
+              child: Container(
+                padding: EdgeInsets.all(16.w),
+                child: const Center(
+                  child: Text('Assessment Table Placeholder'),
+                ),
+              ),
             ),
           ),
         ],
@@ -233,10 +237,8 @@ class DashboardContent extends ConsumerWidget {
           ),
           child: const ChartLineLinear(),
         ),
-        
-        SizedBox(height: 16.h),
-        
-        // Assessment table at bottom
+          SizedBox(height: 16.h),
+          // Assessment table at bottom
         Container(
           height: 400.h,
           decoration: BoxDecoration(
@@ -246,10 +248,43 @@ class DashboardContent extends ConsumerWidget {
               color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
             ),
           ),
-          child: const AssessmentTable(),
+          child: ui.AssessmentTable(
+            assessments: _getSampleAssessments(),
+          ),
         ),
       ],
     );
+  }
+
+  List<ui.Assessment> _getSampleAssessments() {
+    return [
+      ui.Assessment(
+        courseCode: 'IT 310',
+        type: 'Midterm Practical',
+        date: DateTime(2025, 6, 22),
+        status: ui.AssessmentStatus.completed,
+        score: 96,
+      ),
+      ui.Assessment(
+        courseCode: 'ENG 101',
+        type: 'Portfolio',
+        date: DateTime(2025, 6, 20),
+        status: ui.AssessmentStatus.completed,
+        score: 92,
+      ),
+      ui.Assessment(
+        courseCode: 'CS 101',
+        type: 'Midterm Exam',
+        date: DateTime(2025, 7, 1),
+        status: ui.AssessmentStatus.missing,
+      ),
+      ui.Assessment(
+        courseCode: 'MATH 201',
+        type: 'Final Exam',
+        date: DateTime(2025, 8, 15),
+        status: ui.AssessmentStatus.upcoming,
+      ),
+    ];
   }
 
   Widget _buildMetricCard(

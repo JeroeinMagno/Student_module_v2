@@ -26,13 +26,9 @@ class _ExamPageState extends ConsumerState<ExamPage> {
       drawer: const AppSidebar(),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
+          padding: EdgeInsets.all(16.w),          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Exam Overview',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),

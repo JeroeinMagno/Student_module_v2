@@ -9,6 +9,8 @@ import '../../presentation/widgets/charts/chart_widgets.dart';
 import '../../presentation/widgets/tables/table_widgets.dart' as ui;
 import '../../presentation/widgets/common/app_components.dart';
 import '../../core/theme/app_theme.dart';
+import '../../data/services/centralized_data_service.dart';
+import '../../data/converters/assessment_converter.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -146,37 +148,45 @@ class DashboardOverviewPage extends StatelessWidget {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        }
-
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome message
-              _buildWelcomeSection(context, provider.student),
-              
-              SizedBox(height: 24.h),
-              
-              // Charts section (mimicking web layout)
-              _buildChartsSection(context, provider),
-              
-              SizedBox(height: 24.h),
-              
-              // Recent assessments and insights
-              _buildBottomSection(context, provider),
-            ],
-          ),
+        }        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isLandscape = constraints.maxWidth > constraints.maxHeight;
+            final screenWidth = constraints.maxWidth;
+            
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.w,
+                vertical: 12.h,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Welcome message
+                  _buildWelcomeSection(context, provider.student),
+                  
+                  SizedBox(height: 24.h),
+                  
+                  // Charts section (responsive layout)
+                  _buildChartsSection(context, provider, isLandscape, screenWidth),
+                  
+                  SizedBox(height: 24.h),
+                  
+                  // Recent assessments and insights
+                  _buildBottomSection(context, provider),
+                ],
+              ),
+            );
+          },
         );
       },
     );
   }
-
   Widget _buildWelcomeSection(BuildContext context, domain.Student? student) {
     final theme = Theme.of(context);
     
     return AppCard(
       backgroundColor: AppTheme.primaryGreen,
+      padding: EdgeInsets.all(20.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -185,6 +195,7 @@ class DashboardOverviewPage extends StatelessWidget {
             style: theme.textTheme.headlineMedium?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w700,
+              fontSize: 24.sp,
             ),
           ),
           SizedBox(height: 8.h),
@@ -192,14 +203,130 @@ class DashboardOverviewPage extends StatelessWidget {
             'Here\'s your academic overview for this semester',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: Colors.white.withOpacity(0.9),
+              fontSize: 16.sp,
             ),
           ),
         ],
       ),
     );
   }
+  Widget _buildChartsSection(BuildContext context, DashboardProvider provider, bool isLandscape, double screenWidth) {
+    // For small screens or portrait mode, stack charts vertically
+    if (screenWidth < 600.w || !isLandscape) {
+      return Column(
+        children: [
+          // Quick stats row
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 100.h,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Quick Stats',
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Container(
+                  height: 100.h,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Grade Overview',
+                      style: TextStyle(fontSize: 14.sp),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          
+          SizedBox(height: 16.h),
+            // Horizontal bar chart - full width
+          FutureBuilder<Map<String, dynamic>>(
+            future: CentralizedDataService().getAssessmentOverview(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  height: 200.h,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                  ),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              }
 
-  Widget _buildChartsSection(BuildContext context, DashboardProvider provider) {
+              final overviewData = snapshot.data;
+              final monthlyData = overviewData?['monthlyData'] as List<dynamic>? ?? [];
+              
+              final chartData = monthlyData.map((item) => 
+                ChartDataModel(
+                  label: item['month'] ?? '', 
+                  value: (item['score'] as num?)?.toDouble() ?? 0.0
+                )
+              ).toList();
+
+              return HorizontalBarChart(
+                title: 'Assessment Overview',
+                subtitle: 'Recent Performance - 2025',
+                data: chartData,
+                height: 200.h,
+              );
+            },
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Performance trend - full width
+          Container(
+            height: 180.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+            ),
+            child: Center(
+              child: Text(
+                'Performance Trend',
+                style: TextStyle(fontSize: 14.sp),
+              ),
+            ),
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Grade distribution - full width
+          Container(
+            height: 180.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+            ),
+            child: Center(
+              child: Text(
+                'Grade Distribution',
+                style: TextStyle(fontSize: 14.sp),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    
+    // For larger screens and landscape mode, use grid layout
     return Column(
       children: [
         // Top row - mimicking web's grid layout
@@ -217,8 +344,11 @@ class DashboardOverviewPage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                     ),
-                    child: const Center(
-                      child: Text('Quick Stats'),
+                    child: Center(
+                      child: Text(
+                        'Quick Stats',
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
                     ),
                   ),
                   SizedBox(height: 16.h),
@@ -229,8 +359,11 @@ class DashboardOverviewPage extends StatelessWidget {
                       color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                     ),
-                    child: const Center(
-                      child: Text('Grade Overview'),
+                    child: Center(
+                      child: Text(
+                        'Grade Overview',
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
                     ),
                   ),
                 ],
@@ -238,15 +371,40 @@ class DashboardOverviewPage extends StatelessWidget {
             ),
             
             SizedBox(width: 16.w),
-            
-            // Right side - horizontal bar chart
+              // Right side - horizontal bar chart
             Expanded(
               flex: 2,
-              child: HorizontalBarChart(
-                title: 'Assessment Overview',
-                subtitle: 'January - June 2024',
-                data: _getSampleBarData(),
-                height: 256.h,
+              child: FutureBuilder<Map<String, dynamic>>(
+                future: CentralizedDataService().getAssessmentOverview(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                      height: 256.h,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+                      ),
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  final overviewData = snapshot.data;
+                  final monthlyData = overviewData?['monthlyData'] as List<dynamic>? ?? [];
+                  
+                  final chartData = monthlyData.map((item) => 
+                    ChartDataModel(
+                      label: item['month'] ?? '', 
+                      value: (item['score'] as num?)?.toDouble() ?? 0.0
+                    )
+                  ).toList();
+
+                  return HorizontalBarChart(
+                    title: 'Assessment Overview',
+                    subtitle: 'Recent Performance - 2025',
+                    data: chartData,
+                    height: 256.h,
+                  );
+                },
               ),
             ),
           ],
@@ -266,8 +424,11 @@ class DashboardOverviewPage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                 ),
-                child: const Center(
-                  child: Text('Performance Trend'),
+                child: Center(
+                  child: Text(
+                    'Performance Trend',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
                 ),
               ),
             ),
@@ -283,8 +444,11 @@ class DashboardOverviewPage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(AppTheme.borderRadius),
                 ),
-                child: const Center(
-                  child: Text('Grade Distribution'),
+                child: Center(
+                  child: Text(
+                    'Grade Distribution',
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
                 ),
               ),
             ),
@@ -293,54 +457,36 @@ class DashboardOverviewPage extends StatelessWidget {
       ],
     );
   }
-
   Widget _buildBottomSection(BuildContext context, DashboardProvider provider) {
-    // Create sample assessment data
-    final assessments = _getSampleAssessments();
-      return ui.AssessmentTable(
-      assessments: assessments,
-      title: 'Recent Assessments',
-    );
-  }  List<ChartDataModel> _getSampleBarData() {
-    return [
-      ChartDataModel(label: 'January', value: 86),
-      ChartDataModel(label: 'February', value: 92),
-      ChartDataModel(label: 'March', value: 78),
-      ChartDataModel(label: 'April', value: 88),
-      ChartDataModel(label: 'May', value: 95),
-      ChartDataModel(label: 'June', value: 89),
-    ];
+    return FutureBuilder<List<Map<String, dynamic>>>(
+      future: CentralizedDataService().getRecentAssessments(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const AppCard(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return AppCard(
+            child: Center(
+              child: Text('Error loading assessments: ${snapshot.error}'),
+            ),
+          );
+        }
+
+        final assessmentData = snapshot.data ?? [];
+        final assessments = AssessmentConverter.toUIAssessmentList(assessmentData);
+
+        return ui.AssessmentTable(
+          assessments: assessments,
+          title: 'Recent Assessments',
+        );
+      },    );
   }
-  List<ui.Assessment> _getSampleAssessments() {
-    return [
-      ui.Assessment(
-        courseCode: 'CS101',
-        type: 'Finals',
-        date: DateTime(2025, 6, 28),
-        status: ui.AssessmentStatus.upcoming,
-      ),
-      ui.Assessment(
-        courseCode: 'MATH123',
-        type: 'Midterms',
-        date: DateTime(2025, 6, 15),
-        status: ui.AssessmentStatus.completed,
-        score: 84,
-      ),
-      ui.Assessment(
-        courseCode: 'HIST200',
-        type: 'Prelims',
-        date: DateTime(2025, 6, 10),
-        status: ui.AssessmentStatus.missing,
-      ),
-      ui.Assessment(
-        courseCode: 'CS101',
-        type: 'Quiz',
-        date: DateTime(2025, 6, 8),
-        status: ui.AssessmentStatus.completed,
-        score: 92,
-      ),
-    ];
-  }
+
 }
 
 class CoursesPage extends StatelessWidget {
@@ -352,46 +498,59 @@ class CoursesPage extends StatelessWidget {
       builder: (context, provider, child) {
         if (provider.isLoading) {
           return const Center(child: CircularProgressIndicator());
-        }
-
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
+        }        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 12.h,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'My Courses',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.h),
+            children: [              SizedBox(height: 16.h),
               
-              // Course cards grid
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
-                ),                itemCount: provider.courses.length,
-                itemBuilder: (context, index) {
-                  final course = provider.courses[index];
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),                    child: ui.CourseCard(
-                      course: ui.Course(
-                        code: course.code,
-                        name: course.name,
-                        credits: course.credits,
-                        progress: 75, // Sample progress
-                        currentGrade: 'A-', // Sample grade
-                      ),
-                      onTap: () {
-                        // TODO: Navigate to course details
-                      },
+              // Course cards - responsive layout
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final isLandscape = constraints.maxWidth > constraints.maxHeight;
+                  final screenWidth = constraints.maxWidth;
+                  
+                  int crossAxisCount = 1;
+                  double childAspectRatio = 2.5;
+                  
+                  if (screenWidth > 600.w) {
+                    crossAxisCount = 2;
+                    childAspectRatio = isLandscape ? 3.0 : 2.8;
+                  }
+                  
+                  if (screenWidth > 900.w) {
+                    crossAxisCount = 3;
+                    childAspectRatio = 2.5;
+                  }
+                  
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      childAspectRatio: childAspectRatio,
+                      crossAxisSpacing: 16.w,
+                      mainAxisSpacing: 16.h,
                     ),
+                    itemCount: provider.courses.length,
+                    itemBuilder: (context, index) {
+                      final course = provider.courses[index];
+                      return ui.CourseCard(
+                        course: ui.Course(
+                          code: course.code,
+                          name: course.name,
+                          credits: course.credits,
+                          progress: 75, // Sample progress
+                          currentGrade: 'A-', // Sample grade
+                        ),
+                        onTap: () {
+                          // TODO: Navigate to course details
+                        },
+                      );
+                    },
                   );
                 },
               ),
@@ -412,10 +571,11 @@ class ExamsPage extends StatelessWidget {
       builder: (context, provider, child) {
         if (provider.isLoading) {
           return const Center(child: CircularProgressIndicator());
-        }
-
-        return SingleChildScrollView(
-          padding: EdgeInsets.all(16.w),
+        }        return SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 12.h,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -423,30 +583,41 @@ class ExamsPage extends StatelessWidget {
                 'Exams & Assessments',
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w700,
+                  fontSize: 24.sp,
                 ),
               ),
               SizedBox(height: 16.h),
               
-              // Exam cards
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: provider.exams.length,
-                itemBuilder: (context, index) {
-                  final exam = provider.exams[index];                  return Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
-                    child: ui.ExamScoreCard(
-                      exam: ui.Exam(
-                        title: exam.name,
-                        courseCode: exam.courseId,
-                        type: 'Exam',
-                        date: exam.date,
-                        score: null,
-                      ),
-                      onTap: () {
-                        // TODO: Navigate to exam details
-                      },
-                    ),
+              // Exam cards - responsive layout
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final screenWidth = constraints.maxWidth;
+                  
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: provider.exams.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                    itemBuilder: (context, index) {
+                      final exam = provider.exams[index];
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: screenWidth < 600.w ? double.infinity : 600.w,
+                        ),
+                        child: ui.ExamScoreCard(
+                          exam: ui.Exam(
+                            title: exam.name,
+                            courseCode: exam.courseId,
+                            type: 'Exam',
+                            date: exam.date,
+                            score: null,
+                          ),
+                          onTap: () {
+                            // TODO: Navigate to exam details
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -460,71 +631,94 @@ class ExamsPage extends StatelessWidget {
 
 class CareerPage extends StatelessWidget {
   const CareerPage({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.work_outline,
-            size: 64.w,
-            color: AppTheme.textSecondary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 400.w;
+        
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 24.h,
           ),
-          SizedBox(height: 16.h),
-          Text(
-            'Career Section',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.work_outline,
+                size: isSmallScreen ? 48.w : 64.w,
+                color: AppTheme.textSecondary,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'Career Section',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: isSmallScreen ? 20.sp : 24.sp,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Career guidance and opportunities coming soon!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppTheme.textSecondary,
+                  fontSize: isSmallScreen ? 14.sp : 16.sp,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Career guidance and opportunities coming soon!',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class ChatbotPage extends StatelessWidget {
   const ChatbotPage({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.chat_bubble_outline,
-            size: 64.w,
-            color: AppTheme.textSecondary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 400.w;
+        
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 24.h,
           ),
-          SizedBox(height: 16.h),
-          Text(
-            'AI Chatbot',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.chat_bubble_outline,
+                size: isSmallScreen ? 48.w : 64.w,
+                color: AppTheme.textSecondary,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'AI Chatbot',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: isSmallScreen ? 20.sp : 24.sp,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'AI-powered academic assistant coming soon!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppTheme.textSecondary,
+                  fontSize: isSmallScreen ? 14.sp : 16.sp,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'AI-powered academic assistant coming soon!',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: AppTheme.textSecondary,            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

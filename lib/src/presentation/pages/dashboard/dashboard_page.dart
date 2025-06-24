@@ -1,38 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../widgets/app_sidebar.dart';
-import '../../widgets/dashboard_content.dart';
-import '../../widgets/custom_app_bar.dart';
-import '../../widgets/custom_bottom_nav_bar.dart';
 
-class DashboardPage extends ConsumerStatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
-  ConsumerState<DashboardPage> createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends ConsumerState<DashboardPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
-        onMenuPressed: () {
-          _scaffoldKey.currentState?.openDrawer();
-        },
+    return Container(
+      padding: EdgeInsets.all(16.w),      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Access your academic information and performance through the sidebar menu.',
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
+        ],
       ),
-      drawer: const AppSidebar(),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: const DashboardContent(),
-        ),
-      ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
     );
   }
 }

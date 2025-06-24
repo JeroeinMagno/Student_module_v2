@@ -51,7 +51,7 @@ class _ExamTabState extends ConsumerState<ExamTab> {
                 Icon(
                   Icons.quiz_outlined,
                   size: 64.w,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -404,7 +404,7 @@ class ExamInsights extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(8.w),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withOpacity(0.15),
             borderRadius: BorderRadius.circular(8.r),
           ),
           child: Icon(
@@ -428,7 +428,7 @@ class ExamInsights extends StatelessWidget {
               Text(
                 description,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
                 ),
               ),
             ],

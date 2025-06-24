@@ -22,7 +22,7 @@ class ChartBarHorizontal extends StatelessWidget {
           Text(
             'January - June 2024',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85),  // Increased from 0.7
             ),
           ),
           SizedBox(height: 20.h),
@@ -97,7 +97,7 @@ class ChartRadialStacked extends StatelessWidget {
           Text(
             'Current semester',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85),  // Increased from 0.7
             ),
           ),
           SizedBox(height: 20.h),
@@ -181,7 +181,7 @@ class ChartLineLinear extends StatelessWidget {
           Text(
             'Academic year progress',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85),  // Increased from 0.7
             ),
           ),
           SizedBox(height: 20.h),
@@ -194,7 +194,7 @@ class ChartLineLinear extends StatelessWidget {
                   horizontalInterval: 1,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                      color: Theme.of(context).colorScheme.outline.withOpacity(0.15),  // Increased from 0.1
                       strokeWidth: 1,
                     );
                   },
@@ -247,7 +247,7 @@ class ChartLineLinear extends StatelessWidget {
                     dotData: const FlDotData(show: true),
                     belowBarData: BarAreaData(
                       show: true,
-                      color: const Color(0xFF6B9B8A).withOpacity(0.1),
+                      color: const Color(0xFF6B9B8A).withOpacity(0.15),  // Increased from 0.1
                     ),
                   ),
                 ],

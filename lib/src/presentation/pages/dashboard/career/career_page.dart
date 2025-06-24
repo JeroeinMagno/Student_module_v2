@@ -26,17 +26,9 @@ class _CareerPageState extends ConsumerState<CareerPage> {
       drawer: const AppSidebar(),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
+          padding: EdgeInsets.all(16.w),          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Career Guidance',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 20.h),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

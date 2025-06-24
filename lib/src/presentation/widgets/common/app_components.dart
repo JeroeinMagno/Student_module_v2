@@ -19,34 +19,47 @@ class AppCard extends StatelessWidget {
     this.border,
     this.onTap,
   });
-
+  
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final defaultColor = isDark ? AppTheme.cardDark : AppTheme.cardLight;
     final borderColor = isDark ? AppTheme.borderDark : AppTheme.borderLight;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-      child: Container(
-        padding: padding ?? EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: backgroundColor ?? defaultColor,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final responsivePadding = padding ?? EdgeInsets.all(
+          constraints.maxWidth < 360.w ? 12.w : 16.w,
+        );
+        
+        return InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(AppTheme.borderRadius),
-          border: border ?? Border.all(color: borderColor, width: 1),
-          boxShadow: elevation != null && elevation! > 0
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: elevation!,
-                    offset: Offset(0, elevation! / 2),
-                  ),
-                ]
-              : null,
-        ),
-        child: child,
-      ),
+          child: Container(
+            padding: responsivePadding,
+            decoration: BoxDecoration(
+              color: backgroundColor ?? defaultColor,
+              borderRadius: BorderRadius.circular(AppTheme.borderRadius),
+              border: border ?? Border.all(color: borderColor, width: 1),
+              boxShadow: elevation != null && elevation! > 0
+                  ? [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: elevation!,
+                        offset: Offset(0, elevation! / 2),
+                      ),
+                    ]
+                  : null,
+            ),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -112,13 +125,14 @@ class AppBadge extends StatelessWidget {
       case BadgeVariant.destructive:
         bgColor = AppTheme.destructive.withOpacity(0.1);
         fgColor = AppTheme.destructive;
-        break;      case BadgeVariant.outline:
+        break;      
+      case BadgeVariant.outline:
         bgColor = Colors.transparent;
-        fgColor = theme.colorScheme.onSurface;
+        fgColor = isDark ? theme.colorScheme.onSurface : AppTheme.textPrimary;
         break;
       case BadgeVariant.default_:
         bgColor = isDark ? AppTheme.mutedDark : AppTheme.mutedLight;
-        fgColor = theme.colorScheme.onSurface;
+        fgColor = isDark ? theme.colorScheme.onSurface : AppTheme.textPrimary;
         break;
     }
 

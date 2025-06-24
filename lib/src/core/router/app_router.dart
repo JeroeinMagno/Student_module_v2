@@ -1,50 +1,52 @@
 import 'package:go_router/go_router.dart';
-import '../../presentation/pages/dashboard/dashboard_page.dart';
-import '../../presentation/pages/dashboard/course/course_page.dart';
+import '../../presentation/layouts/main_layout.dart';
 import '../../presentation/pages/dashboard/course/course_detail_page.dart' as detail;
-import '../../presentation/pages/dashboard/exam/exam_page.dart';
-import '../../presentation/pages/dashboard/career/career_page.dart';
-import '../../presentation/pages/dashboard/bot/bot_page.dart';
 import '../../presentation/pages/splash/splash_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/performance', // Change initial location to performance
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const SplashPage(),
+        redirect: (_, __) => '/performance', // Redirect root to performance
+      ),
+      GoRoute(
+        path: '/performance',
+        builder: (context, state) => const MainLayout(currentRoute: '/performance'),
       ),
       GoRoute(
         path: '/dashboard',
-        builder: (context, state) => const DashboardPage(),
+        builder: (context, state) => const MainLayout(currentRoute: '/dashboard'),
+      ),
+      GoRoute(
+        path: '/courses',
+        builder: (context, state) => const MainLayout(currentRoute: '/courses'),
         routes: [
           GoRoute(
-            path: '/course',
-            builder: (context, state) => const CoursePage(),
-            routes: [
-              GoRoute(
-                path: '/:courseId',
-                builder: (context, state) {
-                  final courseId = state.pathParameters['courseId']!;
-                  return detail.CourseDetailPage(courseId: courseId);
-                },
-              ),
-            ],
-          ),
-          GoRoute(
-            path: '/exam',
-            builder: (context, state) => const ExamPage(),
-          ),
-          GoRoute(
-            path: '/career',
-            builder: (context, state) => const CareerPage(),
-          ),
-          GoRoute(
-            path: '/bot',
-            builder: (context, state) => const BotPage(),
+            path: ':courseId',
+            builder: (context, state) {
+              final courseId = state.pathParameters['courseId']!;
+              return detail.CourseDetailPage(courseId: courseId);
+            },
           ),
         ],
+      ),
+      GoRoute(
+        path: '/exam-overview',
+        builder: (context, state) => const MainLayout(currentRoute: '/exam-overview'),
+      ),
+      GoRoute(
+        path: '/skill-profile',
+        builder: (context, state) => const MainLayout(currentRoute: '/skill-profile'),
+      ),
+      GoRoute(
+        path: '/track-readiness',
+        builder: (context, state) => const MainLayout(currentRoute: '/track-readiness'),
+      ),
+      GoRoute(
+        path: '/chatbot',
+        builder: (context, state) => const MainLayout(currentRoute: '/chatbot'),
       ),
     ],
   );

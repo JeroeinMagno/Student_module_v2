@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../widgets/app_sidebar.dart';
-import '../../../widgets/custom_app_bar.dart';
+import '../../../../domain/models/course.dart';
+import '../../../../domain/providers/course_provider.dart';
 import '../../../widgets/custom_bottom_nav_bar.dart';
+import '../../../widgets/custom_app_bar.dart';
+import '../../../widgets/navigation/app_sidebar.dart';
 
-class CoursePage extends ConsumerStatefulWidget {
+/// A page that displays a grid of available courses
+class CoursePage extends ConsumerWidget {
   const CoursePage({super.key});
 
   @override
-  ConsumerState<CoursePage> createState() => _CoursePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final courses = ref.watch(coursesProvider);
 
-class _CoursePageState extends ConsumerState<CoursePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: CustomAppBar(
         onMenuPressed: () {
-          _scaffoldKey.currentState?.openDrawer();
+          Scaffold.of(context).openDrawer();
         },
       ),
       drawer: const AppSidebar(),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -39,18 +36,19 @@ class _CoursePageState extends ConsumerState<CoursePage> {
               ),
               SizedBox(height: 20.h),
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.2,
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
+                child: courses.when(
+                  data: (courseList) => _buildCourseGrid(context, courseList),
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) => Center(
+                    child: Text(
+                      'Error loading courses: $error',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                   ),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return _buildCourseCard(context, index);
-                  },
-                ),              ),
+                ),
+              ),
             ],
           ),
         ),
@@ -59,27 +57,52 @@ class _CoursePageState extends ConsumerState<CoursePage> {
     );
   }
 
-  Widget _buildCourseCard(BuildContext context, int index) {
-    final courses = [
-      {'title': 'Mathematics', 'code': 'MATH101', 'instructor': 'Dr. Smith'},
-      {'title': 'Physics', 'code': 'PHYS101', 'instructor': 'Dr. Johnson'},
-      {'title': 'Chemistry', 'code': 'CHEM101', 'instructor': 'Dr. Brown'},
-      {'title': 'English', 'code': 'ENG101', 'instructor': 'Prof. Davis'},
-      {'title': 'History', 'code': 'HIST101', 'instructor': 'Dr. Wilson'},
-      {'title': 'Computer Science', 'code': 'CS101', 'instructor': 'Dr. Garcia'},
-    ];
+  Widget _buildCourseGrid(BuildContext context, List<Course> courses) {
+    if (courses.isEmpty) {
+      return Center(
+        child: Text(
+          'No courses available',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      );
+    }
 
-    final course = courses[index % courses.length];
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+        childAspectRatio: 1.2,
+        crossAxisSpacing: 16.w,
+        mainAxisSpacing: 16.h,
+      ),
+      itemCount: courses.length,
+      itemBuilder: (context, index) => CourseCard(course: courses[index]),
+    );
+  }
+}
 
+/// A card widget that displays course information
+class CourseCard extends StatelessWidget {
+  final Course course;
+
+  const CourseCard({
+    super.key,
+    required this.course,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: InkWell(
-        onTap: () {
-          // Navigate to course details
-        },
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CourseDetailPage(courseId: course.id),
+          ),
+        ),
         borderRadius: BorderRadius.circular(12.r),
         child: Padding(
           padding: EdgeInsets.all(16.w),
@@ -101,7 +124,7 @@ class _CoursePageState extends ConsumerState<CoursePage> {
               ),
               SizedBox(height: 12.h),
               Text(
-                course['title']!,
+                course.title,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -110,7 +133,7 @@ class _CoursePageState extends ConsumerState<CoursePage> {
               ),
               SizedBox(height: 4.h),
               Text(
-                course['code']!,
+                course.code,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
@@ -118,7 +141,7 @@ class _CoursePageState extends ConsumerState<CoursePage> {
               ),
               const Spacer(),
               Text(
-                course['instructor']!,
+                course.instructor,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
@@ -131,7 +154,7 @@ class _CoursePageState extends ConsumerState<CoursePage> {
   }
 }
 
-class CourseDetailPage extends ConsumerStatefulWidget {
+class CourseDetailPage extends ConsumerWidget {
   final String courseId;
 
   const CourseDetailPage({
@@ -140,50 +163,76 @@ class CourseDetailPage extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CourseDetailPage> createState() => _CourseDetailPageState();
-}
-
-class _CourseDetailPageState extends ConsumerState<CourseDetailPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
-        onMenuPressed: () {
-          _scaffoldKey.currentState?.openDrawer();
-        },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final courseAsync = ref.watch(
+      coursesProvider.select(
+        (value) => value.whenData(
+          (courses) => courses.firstWhere((c) => c.id == courseId),
+        ),
       ),
-      drawer: const AppSidebar(),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Course Details',
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back),
+        child: courseAsync.when(
+          data: (course) => Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  course.title,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    'Course Details',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Course Code: ${course.code}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Instructor: ${course.instructor}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Description:',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  course.description,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            ),
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, stack) => Center(
+            child: Text(
+              'Error loading course: $error',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.error,
               ),
-              SizedBox(height: 20.h),
-              Text(
-                'Course ID: ${widget.courseId}',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              // Add more course details here
-            ],
+            ),
           ),
         ),
       ),

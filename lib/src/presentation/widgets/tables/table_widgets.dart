@@ -18,6 +18,7 @@ class AssessmentTable extends StatelessWidget {
 
   @override  Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     
     // Sort assessments by date (most recent first)
     final sortedAssessments = List<Assessment>.from(assessments)
@@ -35,6 +36,7 @@ class AssessmentTable extends StatelessWidget {
                 title,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ),
@@ -55,7 +57,9 @@ class AssessmentTable extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textSecondary,
               ),
-              dataTextStyle: theme.textTheme.bodyMedium,
+              dataTextStyle: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
               columns: const [
                 DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Assessment')),
@@ -71,6 +75,7 @@ class AssessmentTable extends StatelessWidget {
                         assessment.courseCode,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                     ),
@@ -152,6 +157,7 @@ class CourseCard extends StatelessWidget {
                 course.code,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               AppBadge(
@@ -212,7 +218,9 @@ class CourseCard extends StatelessWidget {
                     course.currentGrade ?? 'N/A',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: _getGradeColor(course.currentGrade),
+                      color: course.currentGrade != null 
+                          ? _getGradeColor(course.currentGrade)
+                          : AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -284,6 +292,7 @@ class ExamScoreCard extends StatelessWidget {
                   exam.title,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -328,7 +337,7 @@ class ExamScoreCard extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       color: exam.score != null 
                           ? _getScoreColor(exam.score!)
-                          : AppTheme.textSecondary,
+                          : theme.colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -348,6 +357,7 @@ class ExamScoreCard extends StatelessWidget {
                     DateFormat('MMM d').format(exam.date),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -415,6 +425,7 @@ class GradeCard extends StatelessWidget {
                   subject,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:mobile_app_student_module_v2/src/dashboard/presentation/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,8 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       setState(() {
         _isLoading = false;
-      });      if (mounted) {
-        context.go('/dashboard');
+      });
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
       }
     }
   }

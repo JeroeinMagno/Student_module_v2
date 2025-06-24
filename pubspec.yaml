@@ -46,20 +46,26 @@ dependencies:
   
   # Local storage and preferences
   shared_preferences: ^2.2.3
+    # UI scaling and responsiveness
+  flutter_screenutil: ^5.9.0
+  
+  # Charts and visualizations
+  fl_chart: ^0.66.0
+  
+  # Icons and UI elements
+  font_awesome_flutter: ^10.7.0
   
   # Date and time formatting
   intl: ^0.19.0
   
   # UI and styling
   flutter_svg: ^2.0.10+1
-  flutter_screenutil: ^5.9.0
   google_fonts: ^6.1.0
   
   # Navigation
   go_router: ^12.1.3
   
-  # Charts and graphs
-  fl_chart: ^0.65.0
+  # Additional charts
   syncfusion_flutter_charts: ^27.1.58
   
   # Dependency injection

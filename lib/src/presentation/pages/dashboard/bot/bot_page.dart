@@ -33,17 +33,7 @@ class _BotPageState extends ConsumerState<BotPage> {
       ),
       drawer: const AppSidebar(),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Text(
-                'Academic Chatbot',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+        child: Column(          children: [
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),

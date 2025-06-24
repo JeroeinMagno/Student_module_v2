@@ -4,7 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class AppSidebar extends StatelessWidget {
-  const AppSidebar({super.key});
+  final VoidCallback onDashboardSelected;
+  final VoidCallback onPerformanceSelected;
+
+  const AppSidebar({
+    super.key,
+    required this.onDashboardSelected,
+    required this.onPerformanceSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +100,19 @@ class AppSidebar extends StatelessWidget {
             Expanded(
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
-                children: [
-                  _buildMenuItem(
+                children: [                  _buildMenuItem(
                     context,
                     icon: Icons.dashboard_outlined,
-                    title: 'Student Performance',
+                    title: 'Dashboard',
                     isActive: true,
-                    onTap: () => context.go('/dashboard'),
+                    onTap: onDashboardSelected,
+                  ),
+                  _buildMenuItem(
+                    context,
+                    icon: Icons.assessment_outlined,
+                    title: 'Student Performance',
+                    isActive: false,
+                    onTap: onPerformanceSelected,
                   ),
                   _buildSubMenuItem(
                     context,
@@ -180,7 +193,7 @@ class AppSidebar extends StatelessWidget {
             fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
             color: isActive
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.onSurface,
+                : Theme.of(context).colorScheme.onSurface.withOpacity(0.85), // Increased from 0.7 for better readability
           ),
         ),
         onTap: onTap,
@@ -205,7 +218,7 @@ class AppSidebar extends StatelessWidget {
         title: Text(
           title,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.9), // Increased from 0.8 for better readability
           ),
         ),
         onTap: onTap,
