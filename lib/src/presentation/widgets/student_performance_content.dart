@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -6,31 +7,29 @@ import 'course_progress_bar.dart';
 class StudentPerformanceContent extends StatelessWidget {
   const StudentPerformanceContent({super.key});
 
-  @override  Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDarkMode ? const Color(0xFF1A2C3E) : Colors.white;
-    final textColor = isDarkMode ? Colors.white70 : Colors.black;
-    final secondaryTextColor = isDarkMode ? Colors.white60 : Colors.black87;
+    final cardColor = isDarkMode ? const Color(0xFF1A1C1E) : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final secondaryTextColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEnrolledUnitsCard(context),
-            SizedBox(height: 16.h),
-            _buildCurriculumCard(context),
-            SizedBox(height: 16.h),
-            _buildCourseProgressOverview(context),
-            SizedBox(height: 16.h),
-            _buildAssessmentTracker(context),
-            SizedBox(height: 16.h),
-            _buildAssessmentTable(context),
-            SizedBox(height: 16.h),
-            _buildGWATrendCard(context),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildEnrolledUnitsCard(context),
+          SizedBox(height: 16.h),
+          _buildCurriculumCard(context),
+          SizedBox(height: 16.h),
+          _buildCourseProgressOverview(context),
+          SizedBox(height: 16.h),
+          _buildAssessmentTracker(context),
+          SizedBox(height: 16.h),
+          _buildAssessmentTable(context),
+          SizedBox(height: 16.h),
+          _buildGWATrendCard(context),
+        ],
       ),
     );
   }
@@ -312,48 +311,91 @@ class StudentPerformanceContent extends StatelessWidget {
               ],
             ),
             SizedBox(height: 16.h),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columnSpacing: 20.w,
-                columns: const [
-                  DataColumn(
-                    label: Text(
-                      'Course Code',
-                      style: TextStyle(color: Colors.white70),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 8.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1C1E),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.white.withOpacity(0.1),
+                    dataTableTheme: DataTableThemeData(
+                      headingTextStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                  DataColumn(
-                    label: Text(
-                      'Assessment',
-                      style: TextStyle(color: Colors.white70),
-                    ),
+                  child: DataTable(
+                    columnSpacing: 32.w,
+                    horizontalMargin: 16.w,
+                    headingRowHeight: 48.h,
+                    dataRowHeight: 52.h,
+                    columns: [
+                      DataColumn(
+                        label: Text(
+                          'Course Code',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Assessment',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Date',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Status',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Score',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                    rows: [
+                      _buildAssessmentRow('CS101', 'Finals', 'Jun 28, 2025', 'Upcoming', '—'),
+                      _buildAssessmentRow('MATH123', 'Midterms', 'Jun 15, 2025', 'Completed', '84%'),
+                      _buildAssessmentRow('HIST200', 'Prelims', 'Jun 10, 2025', 'Missing', '—'),
+                      _buildAssessmentRow('CS101', 'Quiz', 'Jun 8, 2025', 'Completed', '92%'),
+                    ],
                   ),
-                  DataColumn(
-                    label: Text(
-                      'Date',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Status',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Score',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
-                ],
-                rows: [
-                  _buildAssessmentRow('CS101', 'Finals', 'Jun 28, 2025', 'Upcoming', '-'),
-                  _buildAssessmentRow('MATH123', 'Midterms', 'Jun 15, 2025', 'Completed', '84%'),
-                  _buildAssessmentRow('HIST200', 'Prelims', 'Jun 10, 2025', 'Missing', '-'),
-                  _buildAssessmentRow('CS101', 'Quiz', 'Jun 8, 2025', 'Completed', '92%'),
-                ],
+                ),
               ),
             ),
           ],
@@ -362,47 +404,67 @@ class StudentPerformanceContent extends StatelessWidget {
     );
   }
 
-  DataRow _buildAssessmentRow(
-    String courseCode,
-    String assessment,
-    String date,
-    String status,
-    String score,
-  ) {
-    Color statusColor;
+  List<DataRow> _buildAssessmentRows(BuildContext context, Color textColor, Color secondaryTextColor) {
+    return [
+      _buildAssessmentRow('CS101', 'Finals', 'Jun 28, 2025', 'Upcoming', '—'),
+      _buildAssessmentRow('MATH123', 'Midterms', 'Jun 15, 2025', 'Completed', '84%'),
+      _buildAssessmentRow('HIST200', 'Prelims', 'Jun 10, 2025', 'Missing', '—'),
+      _buildAssessmentRow('CS101', 'Quiz', 'Jun 8, 2025', 'Completed', '92%'),
+    ];
+  }
+
+  DataRow _buildAssessmentRow(String courseCode, String assessment, String date, String status, String score) {
+    Color statusBgColor;
     switch (status.toLowerCase()) {
       case 'completed':
-        statusColor = Colors.green;
+        statusBgColor = const Color(0xFF00875A);
         break;
       case 'upcoming':
-        statusColor = Colors.blue;
+        statusBgColor = const Color(0xFF0052CC);
         break;
       case 'missing':
-        statusColor = Colors.red;
+        statusBgColor = const Color(0xFFDE350B);
         break;
       default:
-        statusColor = Colors.white70;
+        statusBgColor = Colors.grey.withOpacity(0.3);
     }
+
+    final baseTextStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w400,
+    );
 
     return DataRow(
       cells: [
-        DataCell(Text(courseCode, style: const TextStyle(color: Colors.white70))),
-        DataCell(Text(assessment, style: const TextStyle(color: Colors.white70))),
-        DataCell(Text(date, style: const TextStyle(color: Colors.white70))),
+        DataCell(Text(courseCode, style: baseTextStyle)),
+        DataCell(Text(assessment, style: baseTextStyle)),
+        DataCell(Text(date, style: baseTextStyle)),
         DataCell(
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.15),  // Increased from 0.1 for better visibility
+              color: statusBgColor,
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
               status,
-              style: TextStyle(color: statusColor),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         ),
-        DataCell(Text(score, style: const TextStyle(color: Colors.white70))),
+        DataCell(
+          Text(
+            score,
+            style: baseTextStyle.copyWith(
+              color: score == '—' ? Colors.white.withOpacity(0.5) : Colors.white,
+            ),
+          ),
+        ),
       ],
     );
   }
