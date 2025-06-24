@@ -105,6 +105,7 @@ class StudentPerformanceContent extends StatelessWidget {
   Widget _buildCurriculumCard(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white70 : Colors.black;
+    final secondaryTextColor = isDarkMode ? Colors.white70 : Colors.black87;
 
     return _buildCard(
       context: context,
@@ -127,28 +128,28 @@ class StudentPerformanceContent extends StatelessWidget {
                 Text(
                   '27/47',
                   style: TextStyle(
-                    color: Colors.green,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(width: 12.w),
-                const Expanded(
+                Expanded(
                   child: Text(
                     'You completed 57% of your curriculum.',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: secondaryTextColor,
                       fontSize: 14,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 8.h),
-            const Text(
+            SizedBox(height: 8.h),            
+            Text(
               '8 completed, 3 in progress',
               style: TextStyle(
-                color: Colors.white70,
+                color: secondaryTextColor,
                 fontSize: 14,
               ),
             ),
