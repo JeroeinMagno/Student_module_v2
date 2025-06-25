@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../pages/dashboard/course/course_page.dart';
 import '../pages/dashboard/exam/exam_page.dart';
 import '../pages/dashboard/career/career_page.dart';
 import '../pages/dashboard/bot/bot_page.dart';
 import '../widgets/custom_app_bar.dart';
-import '../widgets/collapsible_sidebar.dart';
+import '../widgets/app_drawer.dart';
 import '../widgets/student_performance_content.dart';
 
 class MainLayout extends StatefulWidget {
@@ -22,8 +20,8 @@ class MainLayout extends StatefulWidget {
 }
 
 class _MainLayoutState extends State<MainLayout> {
-  bool _isExpanded = true;
   String _selectedRoute = 'performance';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -37,6 +35,12 @@ class _MainLayoutState extends State<MainLayout> {
         case '/performance':
           _selectedRoute = 'performance';
           break;
+        case '/courses':
+          _selectedRoute = 'courses';
+          break;
+        case '/exam-overview':
+          _selectedRoute = 'exam-overview';
+          break;
         case '/skill-profile':
           _selectedRoute = 'career';
           break;
@@ -44,12 +48,6 @@ class _MainLayoutState extends State<MainLayout> {
           _selectedRoute = 'chatbot';
           break;
       }
-    });
-  }
-
-  void _toggleSidebar() {
-    setState(() {
-      _isExpanded = !_isExpanded;
     });
   }
 
@@ -97,60 +95,25 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.background,
+      appBar: CustomAppBar(
+        title: _getPageTitle(widget.currentRoute),
+        showMenuButton: true,
+        onMenuPressed: () {
+          _scaffoldKey.currentState?.openDrawer();
+        },
+      ),
+      drawer: AppDrawer(
+        currentRoute: widget.currentRoute,
+        onRouteSelected: (route) {
+          setState(() {
+            _selectedRoute = route;
+          });
+        },
+      ),
       body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.only(left: 60.w),
-                child: Column(
-                  children: [
-                    PreferredSize(
-                      preferredSize: Size.fromHeight(56.h),
-                      child: CustomAppBar(
-                        title: _getPageTitle(widget.currentRoute),
-                        showMenuButton: false,
-                      ),
-                    ),
-                    Expanded(
-                      child: _getPageContent(widget.currentRoute),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 0,
-              child: Material(
-                elevation: 4,
-                child: CollapsibleSidebar(
-                  isExpanded: _isExpanded,
-                  onToggle: _toggleSidebar,
-                  selectedRoute: _selectedRoute,
-                  onRouteSelected: (route) {
-                    setState(() {
-                      _selectedRoute = route;
-                    });
-                    switch (route) {
-                      case 'career':
-                        context.go('/skill-profile');
-                        break;
-                      case 'chatbot':
-                        context.go('/chatbot');
-                        break;
-                      case 'performance':
-                        context.go('/performance');
-                        break;
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: _getPageContent(widget.currentRoute),
       ),
     );
   }
