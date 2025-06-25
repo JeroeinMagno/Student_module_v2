@@ -17,18 +17,30 @@ class _ExamPageState extends ConsumerState<ExamPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
+      key: _scaffoldKey,      appBar: CustomAppBar(
+        title: 'Exams',
         onMenuPressed: () {
           _scaffoldKey.currentState?.openDrawer();
         },
       ),
-      drawer: const AppSidebar(),
-      body: SafeArea(
+      drawer: AppSidebar(
+        onDashboardSelected: () {
+          Navigator.pop(context);
+          // Navigate to dashboard
+        },
+        onPerformanceSelected: () {
+          Navigator.pop(context);
+          // Navigate to performance page
+        },
+      ),      body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),          child: Column(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Exam Overview',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -69,11 +81,10 @@ class _ExamPageState extends ConsumerState<ExamPage> {
         padding: EdgeInsets.all(16.w),
         child: Row(
           children: [
-            Container(
-              width: 50.w,
+            Container(              width: 50.w,
               height: 50.w,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
@@ -95,9 +106,8 @@ class _ExamPageState extends ConsumerState<ExamPage> {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    'Date: ${exam['date']}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    'Date: ${exam['date']}',                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -106,10 +116,9 @@ class _ExamPageState extends ConsumerState<ExamPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                Container(                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(

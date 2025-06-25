@@ -25,15 +25,24 @@ class _BotPageState extends ConsumerState<BotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
+      key: _scaffoldKey,      appBar: CustomAppBar(
+        title: 'Academic Assistant',
         onMenuPressed: () {
           _scaffoldKey.currentState?.openDrawer();
         },
       ),
-      drawer: const AppSidebar(),
-      body: SafeArea(
-        child: Column(          children: [
+      drawer: AppSidebar(
+        onDashboardSelected: () {
+          Navigator.pop(context);
+          // Navigate to dashboard
+        },
+        onPerformanceSelected: () {
+          Navigator.pop(context);
+          // Navigate to performance page
+        },
+      ),      body: SafeArea(
+        child: Column(
+          children: [
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -85,7 +94,7 @@ class _BotPageState extends ConsumerState<BotPage> {
                 borderRadius: BorderRadius.circular(12.r),
                 border: message.isBot
                     ? Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
                       )
                     : null,
               ),
@@ -127,7 +136,7 @@ class _BotPageState extends ConsumerState<BotPage> {
         color: Theme.of(context).colorScheme.surface,
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
           ),
         ),
       ),

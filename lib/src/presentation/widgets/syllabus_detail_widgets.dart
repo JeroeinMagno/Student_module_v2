@@ -129,10 +129,9 @@ class CriteriaProgressChart extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 8.h),
-        LinearProgressIndicator(
+        SizedBox(height: 8.h),        LinearProgressIndicator(
           value: percentage / 100,
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ],
@@ -230,10 +229,9 @@ class GradeOverviewCard extends StatelessWidget {
                                 color: const Color(0xFF6B9B8A),
                               ),
                             ),
-                            Text(
-                              'out of 100',
+                            Text(                              'out of 100',
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                               ),
                             ),
                           ],
@@ -297,7 +295,6 @@ class TopicsTable extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildTopicRow(BuildContext context, Map<String, dynamic> topic) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -306,7 +303,7 @@ class TopicsTable extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -396,7 +393,6 @@ class LearningOutcomesTable extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildOutcomeRow(BuildContext context, Map<String, dynamic> outcome) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -405,7 +401,7 @@ class LearningOutcomesTable extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -414,19 +410,18 @@ class LearningOutcomesTable extends StatelessWidget {
             outcome['achieved'] ? Icons.check_circle : Icons.radio_button_unchecked,
             color: outcome['achieved'] 
                 ? const Color(0xFF4CAF50) 
-                : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             size: 20.w,
           ),
           SizedBox(width: 12.w),
           Expanded(
             child: Text(
-              outcome['name'],
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              outcome['name'],              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 decoration: outcome['achieved'] 
                     ? TextDecoration.lineThrough 
                     : TextDecoration.none,
                 color: outcome['achieved']
-                    ? Theme.of(context).colorScheme.onSurface.withOpacity(0.7)
+                    ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)
                     : Theme.of(context).colorScheme.onSurface,
               ),
             ),

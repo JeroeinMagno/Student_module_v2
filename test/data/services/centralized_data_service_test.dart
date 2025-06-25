@@ -46,10 +46,10 @@ void main() {
         final studentInfo = await dataService.getStudentInfo();
         
         expect(dataService.validateStudentData(studentInfo), true);
-        expect(studentInfo['id'], CentralizedMockData.testUserId);
-        expect(studentInfo['name'], 'John Doe');
+        expect(studentInfo['id'], CentralizedMockData.testUserId);        expect(studentInfo['name'], 'John Doe');
         expect(studentInfo['srCode'], '22-12345');
         expect(studentInfo['email'], 'john.doe@student.bsu.edu.ph');
+        expect(studentInfo['gpa'], 1.25); // Updated to use Philippine GWA scale
       });
 
       test('should return user courses', () async {
@@ -285,6 +285,22 @@ void main() {
         };
         expect(dataService.validateAssessmentData(invalidData), false);
       });
+
+      test('should validate program data correctly', () {
+        final validData = {
+          'programId': 'bscs-2024',
+          'programName': 'Bachelor of Science in Computer Science',
+          'totalRequiredCourses': 47,
+          'currentCourses': 6
+        };
+        expect(dataService.validateProgramData(validData), true);
+
+        final invalidData = {
+          'programId': 'bscs-2024',
+          // Missing programName, totalRequiredCourses, and currentCourses
+        };
+        expect(dataService.validateProgramData(invalidData), false);
+      });
     });
 
     group('Data Consistency Tests', () {
@@ -301,6 +317,38 @@ void main() {
         
         // Check that student ID is consistent
         expect(studentInfo['id'], CentralizedMockData.testUserId);
+      });
+
+      test('should verify all data belongs to single test user', () async {
+        final studentInfo = await dataService.getStudentInfo();
+        final programInfo = await dataService.getProgramInfo();
+        final courses = await dataService.getCourses();
+        final assessments = await dataService.getAllAssessments();
+        
+        // Verify student info uses test user ID
+        expect(studentInfo['id'], CentralizedMockData.testUserId);
+        expect(studentInfo['name'], 'John Doe');
+        expect(studentInfo['srCode'], '22-12345');
+        
+        // Verify program info matches student info
+        expect(programInfo['programName'], studentInfo['program']);
+        expect(programInfo['college'], studentInfo['college']);
+        
+        // Verify all courses are for the same student (should be 6 courses)
+        expect(courses.length, 6);
+        final expectedCourseIds = {'cs101', 'math201', 'it310', 'phy201', 'eng101', 'hist101'};
+        final actualCourseIds = courses.map((c) => c['id']).toSet();
+        expect(actualCourseIds, expectedCourseIds);
+          // Verify all assessments belong to existing courses
+        expect(assessments.length, 12);
+        final assessmentCourseIds = assessments.map((a) => a['courseId']).toSet();
+        expect(assessmentCourseIds.every((id) => actualCourseIds.contains(id)), true);
+        
+        // Verify no orphaned data
+        for (var assessment in assessments) {
+          expect(actualCourseIds.contains(assessment['courseId']), true,
+              reason: 'Assessment ${assessment['id']} references non-existent course ${assessment['courseId']}');
+        }
       });
 
       test('should maintain data integrity when switching configurations', () async {

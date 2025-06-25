@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../pages/dashboard/dashboard_page.dart';
 import '../pages/dashboard/course/course_page_new.dart';
 import '../pages/dashboard/exam/exam_page_new.dart';
 import '../pages/dashboard/career/career_page_new.dart';
@@ -158,6 +157,8 @@ class _MainLayoutState extends State<MainLayout> {
 }
 
 class StudentPerformanceScreen extends StatelessWidget {
+  const StudentPerformanceScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;

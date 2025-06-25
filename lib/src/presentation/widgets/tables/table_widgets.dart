@@ -15,10 +15,9 @@ class AssessmentTable extends StatelessWidget {
     this.title = 'Recent Assessments',
     this.showHeader = true,
   });
-
-  @override  Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     
     // Sort assessments by date (most recent first)
     final sortedAssessments = List<Assessment>.from(assessments)
@@ -300,7 +299,7 @@ class ExamScoreCard extends StatelessWidget {
               ),
               AppBadge(
                 text: exam.type,
-                backgroundColor: _getExamTypeColor(exam.type).withOpacity(0.1),
+                backgroundColor: _getExamTypeColor(exam.type).withValues(alpha: 0.1),
                 textColor: _getExamTypeColor(exam.type),
               ),
             ],
@@ -434,7 +433,7 @@ class GradeCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: _getGradeColor(grade).withOpacity(0.1),
+                  color: _getGradeColor(grade).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppTheme.borderRadiusSm),
                 ),
                 child: Text(

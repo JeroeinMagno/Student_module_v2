@@ -17,18 +17,34 @@ class _CareerPageState extends ConsumerState<CareerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
+      key: _scaffoldKey,      appBar: CustomAppBar(
+        title: 'Career',
         onMenuPressed: () {
           _scaffoldKey.currentState?.openDrawer();
         },
       ),
-      drawer: const AppSidebar(),
-      body: SafeArea(
+      drawer: AppSidebar(
+        onDashboardSelected: () {
+          Navigator.pop(context);
+          // Navigate to dashboard
+        },
+        onPerformanceSelected: () {
+          Navigator.pop(context);
+          // Navigate to performance page
+        },
+      ),      body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.w),          child: Column(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Career Opportunities',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20.h),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -100,7 +116,7 @@ class _CareerPageState extends ConsumerState<CareerPage> {
                 width: 60.w,
                 height: 60.w,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
@@ -124,7 +140,7 @@ class _CareerPageState extends ConsumerState<CareerPage> {
                     Text(
                       description,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -132,7 +148,7 @@ class _CareerPageState extends ConsumerState<CareerPage> {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                 size: 16.sp,
               ),
             ],

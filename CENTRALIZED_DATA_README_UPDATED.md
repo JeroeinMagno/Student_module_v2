@@ -242,6 +242,45 @@ lib/src/presentation/widgets/demo/
 ---
 
 **Status**: ✅ Assessment Overview and Recent Assessments - FIXED  
-**Last Updated**: June 24, 2025  
+**Status**: ✅ Enrolled Units, Curriculum, Course Progress Overview, Recent Assessments - SYNCED  
+**Last Updated**: June 25, 2025  
 **Test Coverage**: 100% passing  
 **Ready for**: Production API integration
+
+## Recent Data Sync Updates - June 25, 2025 ✅
+
+### Issues Fixed:
+1. **Curriculum Data Sync**: ✅ Added comprehensive program/curriculum data to centralized mock data
+2. **Hardcoded Values Removed**: ✅ Replaced hardcoded `totalCurriculumCourses = 47` with centralized data
+3. **Program Information Integration**: ✅ Added `getProgramInfo()` method to CentralizedDataService
+4. **Assessment Overview Keys**: ✅ Fixed key mismatch between UI and centralized data
+5. **UI Component Sync**: ✅ Updated StudentPerformanceContent to use centralized program data
+
+### New Centralized Data Added:
+```dart
+// Program/Curriculum Information
+testUserProgram = {
+  'programId': 'bscs-2024',
+  'programName': 'Bachelor of Science in Computer Science',
+  'totalRequiredCourses': 47,
+  'currentCourses': 6,
+  'completedCourses': 32,
+  'courseProgressPercentage': 81,
+  'totalRequiredUnits': 144,
+  'currentUnits': 21,
+  'completedUnits': 96,
+  'progressPercentage': 68,
+  'expectedGraduation': '2026-04-30',
+  'isOnTrack': true,
+  'gpa': 3.75,
+  // ... and more curriculum details
+}
+```
+
+### UI Components Now Fully Synced:
+- **Enrolled Units**: ✅ Uses `_studentInfo['units']` from centralized data
+- **Curriculum**: ✅ Uses `_programInfo['totalRequiredCourses']` and progress data
+- **Course Progress Overview**: ✅ Uses `_courses` from centralized data service  
+- **Recent Assessments**: ✅ Uses `_recentAssessments` from centralized data service
+
+All hardcoded values have been removed and replaced with centralized data sources.

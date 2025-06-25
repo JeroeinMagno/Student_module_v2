@@ -15,10 +15,9 @@ class CentralizedMockData {
     'avatar': 'https://randomuser.me/api/portraits/men/75.jpg',
     'yearLevel': '3rd Year',
     'program': 'Bachelor of Science in Computer Science',
-    'college': 'College of Engineering and Information Technology',
-    'semester': '2nd Semester',
+    'college': 'College of Engineering and Information Technology',    'semester': '2nd Semester',
     'academicYear': '2024-2025',
-    'gpa': 3.75,
+    'gpa': 1.25, // GWA: 1.25 is equivalent to "Very Good" in Philippine grading
     'units': 21,
     'status': 'Regular',
   };
@@ -370,14 +369,13 @@ class CentralizedMockData {
       'average': 0.0,    // 70-79% (0 out of 8 assessments)
       'poor': 0.0,       // Below 70% (0 out of 8 assessments)
       'pending': 37.5,   // Missing/Upcoming (3 out of 8 assessments)
-    },
-    'gradeTrends': [
-      {'month': 'January', 'gpa': 3.2},
-      {'month': 'February', 'gpa': 3.5},
-      {'month': 'March', 'gpa': 3.1},
-      {'month': 'April', 'gpa': 3.8},
-      {'month': 'May', 'gpa': 3.6},
-      {'month': 'June', 'gpa': 3.9},
+    },    'gradeTrends': [
+      {'month': 'January', 'gpa': 1.8}, // GWA: 1.0 = highest, 3.0 = lowest passing
+      {'month': 'February', 'gpa': 1.5},
+      {'month': 'March', 'gpa': 1.9},
+      {'month': 'April', 'gpa': 1.2},
+      {'month': 'May', 'gpa': 1.4},
+      {'month': 'June', 'gpa': 1.1}, // Improving trend - lower numbers are better
     ],
     'monthlyScores': [
       {'month': 'January', 'desktop': 78.0},
@@ -386,9 +384,8 @@ class CentralizedMockData {
       {'month': 'April', 'desktop': 85.0},
       {'month': 'May', 'desktop': 88.0},
       {'month': 'June', 'desktop': 89.6}, // Average of June assessments
-    ],
-    'recentAverage': 89.6, // Average of recent completed assessments
-    'overallGPA': 3.75,
+    ],    'recentAverage': 89.6, // Average of recent completed assessments
+    'overallGPA': 1.25, // GWA: 1.25 is "Very Good" in Philippine grading system
     'totalAssessments': 12,
     'completedAssessments': 5,
     'upcomingAssessments': 6,
@@ -538,6 +535,37 @@ class CentralizedMockData {
     },
   ];
 
+  // Test User's Program/Curriculum Information
+  static const Map<String, dynamic> testUserProgram = {
+    'programId': 'bscs-2024',
+    'programName': 'Bachelor of Science in Computer Science',
+    'college': 'College of Engineering and Information Technology',
+    'totalRequiredUnits': 144,
+    'totalRequiredCourses': 47,
+    'currentUnits': 21,
+    'currentCourses': 6,
+    'completedUnits': 96, // Previous semesters
+    'completedCourses': 32, // Previous semesters
+    'remainingUnits': 48,
+    'remainingCourses': 15,
+    'expectedGraduation': '2026-04-30',
+    'curriculumYear': '2024',
+    'yearLevel': 3,
+    'semester': 2,
+    'academicYear': '2024-2025',
+    'progressPercentage': 68, // (96 + 21) / 144 * 100
+    'courseProgressPercentage': 81, // (32 + 6) / 47 * 100    'isOnTrack': true,
+    'gpa': 1.25, // GWA: 1.25 is equivalent to "Very Good"
+    'graduationRequirements': {
+      'coreSubjects': {'required': 32, 'completed': 25, 'inProgress': 4, 'remaining': 3},
+      'majorSubjects': {'required': 12, 'completed': 6, 'inProgress': 2, 'remaining': 4},
+      'electives': {'required': 3, 'completed': 1, 'inProgress': 0, 'remaining': 2},
+    },
+    'currentSemesterUnits': 21,
+    'maxUnitsPerSemester': 24,
+    'minUnitsForRegularStatus': 15,
+  };
+
   // Utility methods to get all user data
   static Map<String, dynamic> getAllUserData() {
     return {
@@ -549,14 +577,13 @@ class CentralizedMockData {
       'learningOutcomes': testLearningOutcomes,
       'assessmentCriteria': testAssessmentCriteria,
       'careerPaths': careerPaths,
+      'program': testUserProgram,
     };
-  }
-
-  // Get data by category
+  }  // Get data by category
   static Map<String, dynamic> getUserInfo() => testUserInfo;
   static List<Map<String, dynamic>> getUserCourses() => testUserCourses;
-  static List<Map<String, dynamic>> getUserAssessments() => testUserAssessments;
-  static Map<String, dynamic> getUserPerformance() => testUserPerformance;
+  static List<Map<String, dynamic>> getUserAssessments() => testUserAssessments;  static Map<String, dynamic> getUserPerformance() => testUserPerformance;
+  static Map<String, dynamic> getUserProgram() => testUserProgram;
   static List<Map<String, dynamic>> getCourseTopics() => testCourseTopics;
   static List<Map<String, dynamic>> getLearningOutcomes() => testLearningOutcomes;
   static List<Map<String, dynamic>> getAssessmentCriteria() => testAssessmentCriteria;

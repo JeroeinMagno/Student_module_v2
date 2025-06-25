@@ -74,7 +74,7 @@ class ExamPage extends StatelessWidget {
                   Text(
                     'Date: ${exam['date']}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -83,7 +83,7 @@ class ExamPage extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(

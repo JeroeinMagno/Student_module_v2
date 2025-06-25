@@ -27,7 +27,7 @@ class CollapsibleSidebar extends StatelessWidget {
         color: isDarkMode ? theme.colorScheme.surface : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(2, 0),
           ),
@@ -35,8 +35,8 @@ class CollapsibleSidebar extends StatelessWidget {
         border: Border(
           right: BorderSide(
             color: isDarkMode 
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.1),
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -53,11 +53,10 @@ class CollapsibleSidebar extends StatelessWidget {
                     height: 44.h,
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: Row(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
                           Icons.dashboard_outlined,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                           size: 20.sp,
                         ),
                         if (isExpanded) ...[
@@ -68,7 +67,7 @@ class CollapsibleSidebar extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -134,7 +133,7 @@ class CollapsibleSidebar extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 8.w),
           decoration: BoxDecoration(
             color: isSelected
-                ? theme.colorScheme.primary.withOpacity(0.1)
+                ? theme.colorScheme.primary.withValues(alpha: 0.1)
                 : Colors.transparent,
             border: Border(
               left: BorderSide(
@@ -146,7 +145,6 @@ class CollapsibleSidebar extends StatelessWidget {
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 icon,
@@ -181,7 +179,6 @@ class CollapsibleSidebar extends StatelessWidget {
     return SizedBox(
       height: 56.h,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(width: 8.w),
           IconButton(
@@ -222,11 +219,10 @@ class CollapsibleSidebar extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           CircleAvatar(
             radius: 16.r,
-            backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+            backgroundColor: theme.colorScheme.primary.withValues(alpha: 0.1),
             child: Icon(
               Icons.person,
               size: 20.sp,
@@ -268,7 +264,8 @@ class CollapsibleSidebar extends StatelessWidget {
 
   Widget _buildLogoutButton(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;    return Padding(
+
+    return Padding(
       padding: EdgeInsets.all(8.w),
       child: SizedBox(
         width: isExpanded ? 180.w : 44.w,
@@ -291,8 +288,7 @@ class CollapsibleSidebar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6.r),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: isExpanded ? MainAxisAlignment.start : MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.logout,

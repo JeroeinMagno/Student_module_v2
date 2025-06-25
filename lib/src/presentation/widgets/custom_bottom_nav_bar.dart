@@ -17,7 +17,7 @@ class CustomBottomNavBar extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -28,7 +28,7 @@ class CustomBottomNavBar extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Theme.of(context).colorScheme.surface,
         selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+        unselectedItemColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
         selectedLabelStyle: TextStyle(
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,

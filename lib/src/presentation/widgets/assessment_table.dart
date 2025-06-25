@@ -19,11 +19,10 @@ class AssessmentTable extends ConsumerWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 4.h),
-          Text(
+          SizedBox(height: 4.h),          Text(
             'Latest exam results',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
             ),
           ),
           SizedBox(height: 20.h),

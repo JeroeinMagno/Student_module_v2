@@ -24,7 +24,7 @@ class AppBottomNavigation extends StatelessWidget {
         color: theme.bottomNavigationBarTheme.backgroundColor,
         border: Border(
           top: BorderSide(
-            color: theme.dividerColor.withOpacity(0.2),
+            color: theme.dividerColor.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -168,7 +168,7 @@ class AppDrawer extends StatelessWidget {
                   Text(
                     student!.studentId,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                 ],
@@ -374,7 +374,7 @@ class InsightsWidget extends StatelessWidget {
                           Text(
                             insight.description,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.7),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                           ),
                         ],

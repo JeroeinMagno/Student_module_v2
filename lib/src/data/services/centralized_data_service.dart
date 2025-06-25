@@ -45,6 +45,19 @@ class CentralizedDataService {
     return CentralizedMockData.getUserInfo();
   }
 
+  /// Program/Curriculum Information
+  Future<Map<String, dynamic>> getProgramInfo() async {
+    await _simulateNetworkDelay();
+    
+    if (_useApiData) {
+      // TODO: Replace with actual API call when backend is ready
+      // return await apiService.getProgramInfo();
+      throw UnimplementedError('API not yet implemented');
+    }
+    
+    return CentralizedMockData.getUserProgram();
+  }
+
   /// Course Data
   Future<List<Map<String, dynamic>>> getCourses() async {
     await _simulateNetworkDelay();
@@ -306,6 +319,11 @@ class CentralizedDataService {
 
   bool validateAssessmentData(Map<String, dynamic> data) {
     final requiredFields = ['id', 'courseId', 'type', 'date', 'status'];
+    return requiredFields.every((field) => data.containsKey(field) && data[field] != null);
+  }
+
+  bool validateProgramData(Map<String, dynamic> data) {
+    final requiredFields = ['programId', 'programName', 'totalRequiredCourses', 'currentCourses'];
     return requiredFields.every((field) => data.containsKey(field) && data[field] != null);
   }
 
