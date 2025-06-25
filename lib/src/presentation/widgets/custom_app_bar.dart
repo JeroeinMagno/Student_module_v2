@@ -31,12 +31,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
     '2025-2026',
     '2026-2027',
   ];
-
   final List<String> semesters = [
     '1st Semester',
     '2nd Semester',
     'Midyear',
-    'Summer',
   ];
 
   void _showAcademicYearDialog() {
