@@ -25,12 +25,14 @@ class _AppDrawerState extends State<AppDrawer> {
     super.initState();
     _initializeExpandedState();
   }
-
   void _initializeExpandedState() {
     // Auto-expand sections based on current route
-    if (widget.currentRoute == '/skill-profile' || widget.currentRoute == '/track-readiness') {
+    if (widget.currentRoute == '/career' || widget.currentRoute == '/skill-profile' || widget.currentRoute == '/track-readiness') {
       _isCareerExpanded = true;
       _isDashboardExpanded = false;
+    } else if (widget.currentRoute == '/performance' || widget.currentRoute == '/courses' || widget.currentRoute == '/exam-overview') {
+      _isDashboardExpanded = true;
+      _isCareerExpanded = false;
     } else {
       _isDashboardExpanded = true;
       _isCareerExpanded = false;
@@ -58,33 +60,27 @@ class _AppDrawerState extends State<AppDrawer> {
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
-                children: [
-                  SizedBox(height: 8.h),
+                children: [                  SizedBox(height: 8.h),
                   
-                  // Dashboard Section (Expandable)
-                  _buildExpandableSection(
+                  // Student Performance Section (Clickable + Expandable)
+                  _buildClickableExpandableSection(
                     context: context,
-                    title: 'Dashboard',
-                    icon: Icons.dashboard_outlined,
-                    selectedIcon: Icons.dashboard,
+                    title: 'Student Performance',
+                    icon: Icons.bar_chart_outlined,
+                    selectedIcon: Icons.bar_chart,
+                    route: 'performance',
                     isExpanded: _isDashboardExpanded,
                     onTap: () {
+                      Navigator.pop(context);
+                      widget.onRouteSelected('performance');
+                      context.go('/performance');
+                    },
+                    onExpandTap: () {
                       setState(() {
                         _isDashboardExpanded = !_isDashboardExpanded;
                       });
                     },
                     children: [
-                      _buildSubMenuItem(
-                        context: context,
-                        icon: Icons.bar_chart_outlined,
-                        title: 'Student Performance',
-                        route: 'performance',
-                        onTap: () {
-                          Navigator.pop(context);
-                          widget.onRouteSelected('performance');
-                          context.go('/performance');
-                        },
-                      ),
                       _buildSubMenuItem(
                         context: context,
                         icon: Icons.book_outlined,
@@ -109,15 +105,19 @@ class _AppDrawerState extends State<AppDrawer> {
                       ),
                     ],
                   ),
-                  
-                  // Career Section (Expandable)
-                  _buildExpandableSection(
+                    // Career Section (Clickable + Expandable)
+                  _buildClickableExpandableSection(
                     context: context,
                     title: 'Career',
                     icon: Icons.work_outline,
                     selectedIcon: Icons.work,
-                    isExpanded: _isCareerExpanded,
-                    onTap: () {
+                    route: 'career',
+                    isExpanded: _isCareerExpanded,                    onTap: () {
+                      Navigator.pop(context);
+                      widget.onRouteSelected('career');
+                      context.go('/career'); // Navigate to dedicated career page
+                    },
+                    onExpandTap: () {
                       setState(() {
                         _isCareerExpanded = !_isCareerExpanded;
                       });
@@ -130,7 +130,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         route: 'skill-profile',
                         onTap: () {
                           Navigator.pop(context);
-                          widget.onRouteSelected('career');
+                          widget.onRouteSelected('skill-profile');
                           context.go('/skill-profile');
                         },
                       ),
@@ -141,7 +141,7 @@ class _AppDrawerState extends State<AppDrawer> {
                         route: 'career-match',
                         onTap: () {
                           Navigator.pop(context);
-                          widget.onRouteSelected('career');
+                          widget.onRouteSelected('career-match');
                           context.go('/track-readiness');
                         },
                       ),
@@ -259,39 +259,55 @@ class _AppDrawerState extends State<AppDrawer> {
       ),
     );
   }
-
-  Widget _buildExpandableSection({
+  Widget _buildClickableExpandableSection({
     required BuildContext context,
     required String title,
     required IconData icon,
     required IconData selectedIcon,
+    required String route,
     required bool isExpanded,
     required VoidCallback onTap,
+    required VoidCallback onExpandTap,
     required List<Widget> children,
   }) {
     final theme = Theme.of(context);
+    final isSelected = _isRouteSelected(route);
 
     return Column(
-      children: [        ListTile(
-          leading: Icon(
-            icon,
-            color: theme.colorScheme.onSurface.withOpacity(0.8),
-            size: 22.sp,
-          ),
-          title: Text(
-            title,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface,
-              fontSize: 16.sp,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: ListTile(
+                leading: Icon(
+                  isSelected ? selectedIcon : icon,
+                  color: isSelected 
+                      ? theme.colorScheme.primary 
+                      : theme.colorScheme.onSurface.withOpacity(0.8),
+                  size: 22.sp,
+                ),
+                title: Text(
+                  title,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                    color: isSelected 
+                        ? theme.colorScheme.primary 
+                        : theme.colorScheme.onSurface,
+                    fontSize: 16.sp,
+                  ),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+                onTap: onTap,
+              ),
             ),
-          ),
-          trailing: Icon(
-            isExpanded ? Icons.expand_less : Icons.expand_more,
-            color: theme.colorScheme.onSurface.withOpacity(0.8),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
-          onTap: onTap,
+            IconButton(
+              icon: Icon(
+                isExpanded ? Icons.expand_less : Icons.expand_more,
+                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              ),
+              onPressed: onExpandTap,
+            ),
+          ],
         ),
         if (isExpanded) ...children,
       ],
@@ -410,9 +426,7 @@ class _AppDrawerState extends State<AppDrawer> {
         },
       ),
     );
-  }
-
-  bool _isRouteSelected(String route) {
+  }  bool _isRouteSelected(String route) {
     switch (route) {
       case 'performance':
         return widget.currentRoute == '/performance' || widget.currentRoute == '/dashboard' || widget.currentRoute == '/';
@@ -420,9 +434,12 @@ class _AppDrawerState extends State<AppDrawer> {
         return widget.currentRoute == '/courses';
       case 'exam-overview':
         return widget.currentRoute == '/exam-overview';
+      case 'career':
+        return widget.currentRoute == '/career';
       case 'skill-profile':
+        return widget.currentRoute == '/skill-profile';
       case 'career-match':
-        return widget.currentRoute == '/skill-profile' || widget.currentRoute == '/track-readiness';
+        return widget.currentRoute == '/track-readiness';
       case 'chatbot':
         return widget.currentRoute == '/chatbot';
       default:

@@ -6,6 +6,7 @@ import '../pages/dashboard/bot/bot_page.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/student_performance_content.dart';
+import '../widgets/blank_page.dart';
 
 class MainLayout extends StatefulWidget {
   final String currentRoute;
@@ -41,11 +42,20 @@ class _MainLayoutState extends State<MainLayout> {
         case '/exam-overview':
           _selectedRoute = 'exam-overview';
           break;
-        case '/skill-profile':
+        case '/career':
           _selectedRoute = 'career';
+          break;
+        case '/skill-profile':
+          _selectedRoute = 'skill-profile';
+          break;
+        case '/track-readiness':
+          _selectedRoute = 'career-match';
           break;
         case '/chatbot':
           _selectedRoute = 'chatbot';
+          break;
+        default:
+          _selectedRoute = 'performance';
           break;
       }
     });
@@ -61,6 +71,8 @@ class _MainLayoutState extends State<MainLayout> {
         return 'Courses';
       case '/exam-overview':
         return 'Exam Overview';
+      case '/career':
+        return 'Career';
       case '/skill-profile':
         return 'Skill Profile';
       case '/track-readiness':
@@ -82,9 +94,12 @@ class _MainLayoutState extends State<MainLayout> {
         return const CoursePage();
       case '/exam-overview':
         return const ExamPage();
-      case '/skill-profile':
-      case '/track-readiness':
+      case '/career':
         return const CareerPage();
+      case '/skill-profile':
+        return const BlankPage(title: 'Skill Profile');
+      case '/track-readiness':
+        return const BlankPage(title: 'Career Match');
       case '/chatbot':
         return const BotPage();
       default:

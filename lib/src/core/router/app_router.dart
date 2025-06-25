@@ -36,6 +36,10 @@ class AppRouter {
         builder: (context, state) => const MainLayout(currentRoute: '/exam-overview'),
       ),
       GoRoute(
+        path: '/career',
+        builder: (context, state) => const MainLayout(currentRoute: '/career'),
+      ),
+      GoRoute(
         path: '/skill-profile',
         builder: (context, state) => const MainLayout(currentRoute: '/skill-profile'),
       ),
