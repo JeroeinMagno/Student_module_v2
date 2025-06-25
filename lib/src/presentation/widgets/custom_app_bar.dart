@@ -7,12 +7,20 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
   final String title;
   final bool showMenuButton;
+  final List<String>? availableAcademicYears;
+  final String? initialAcademicYear;
+  final String? initialSemester;
+  final Function(String year, String semester)? onPeriodChanged;
 
   const CustomAppBar({
     super.key,
     this.onMenuPressed,
     required this.title,
     this.showMenuButton = false,
+    this.availableAcademicYears,
+    this.initialAcademicYear,
+    this.initialSemester,
+    this.onPeriodChanged,
   });
 
   @override
@@ -23,19 +31,62 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  String selectedAcademicYear = '2025-2026';
-  String selectedSemester = 'Midyear';
+  late String selectedAcademicYear;
+  late String selectedSemester;
 
-  final List<String> academicYears = [
-    '2024-2025',
-    '2025-2026',
-    '2026-2027',
-  ];
+  late List<String> academicYears;
   final List<String> semesters = [
     '1st Semester',
     '2nd Semester',
     'Midyear',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Initialize academic years from widget or use default
+    academicYears = widget.availableAcademicYears ?? _generateDefaultAcademicYears();
+    
+    // Initialize selected values from widget or use defaults
+    selectedAcademicYear = widget.initialAcademicYear ?? academicYears.first;
+    selectedSemester = widget.initialSemester ?? 'Midyear';
+  }
+
+  @override
+  void didUpdateWidget(CustomAppBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Update academic years if they changed
+    if (widget.availableAcademicYears != oldWidget.availableAcademicYears) {
+      academicYears = widget.availableAcademicYears ?? _generateDefaultAcademicYears();
+      
+      // Ensure selected year is still valid
+      if (!academicYears.contains(selectedAcademicYear)) {
+        selectedAcademicYear = academicYears.first;
+      }
+    }
+    
+    // Update selected values if they changed
+    if (widget.initialAcademicYear != oldWidget.initialAcademicYear &&
+        widget.initialAcademicYear != null) {
+      selectedAcademicYear = widget.initialAcademicYear!;
+    }
+    
+    if (widget.initialSemester != oldWidget.initialSemester &&
+        widget.initialSemester != null) {
+      selectedSemester = widget.initialSemester!;
+    }
+  }
+
+  List<String> _generateDefaultAcademicYears() {
+    final currentYear = DateTime.now().year;
+    return [
+      '${currentYear - 1}-$currentYear',
+      '$currentYear-${currentYear + 1}',
+      '${currentYear + 1}-${currentYear + 2}',
+    ];
+  }
 
   void _showAcademicYearDialog() {
     showDialog(
@@ -170,12 +221,17 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     // Apply Button
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
+                      child: ElevatedButton(                        onPressed: () {
                           this.setState(() {
                             selectedAcademicYear = tempAcademicYear;
                             selectedSemester = tempSemester;
                           });
+                          
+                          // Call the callback if provided
+                          if (widget.onPeriodChanged != null) {
+                            widget.onPeriodChanged!(tempAcademicYear, tempSemester);
+                          }
+                          
                           Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
