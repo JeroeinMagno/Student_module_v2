@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../pages/dashboard/course/course_page_new.dart';
-import '../pages/dashboard/exam/exam_page_new.dart';
-import '../pages/dashboard/career/career_page_new.dart';
-import '../pages/dashboard/bot/bot_page_new.dart';
+import '../pages/dashboard/course/course_page.dart';
+import '../pages/dashboard/exam/exam_page.dart';
+import '../pages/dashboard/career/career_page.dart';
+import '../pages/dashboard/bot/bot_page.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/collapsible_sidebar.dart';
 import '../widgets/student_performance_content.dart';

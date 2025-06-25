@@ -1,159 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../widgets/app_sidebar.dart';
-import '../../../widgets/custom_app_bar.dart';
 
-class CareerPage extends ConsumerStatefulWidget {
+class CareerPage extends StatelessWidget {
   const CareerPage({super.key});
 
   @override
-  ConsumerState<CareerPage> createState() => _CareerPageState();
-}
-
-class _CareerPageState extends ConsumerState<CareerPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,      appBar: CustomAppBar(
-        title: 'Career',
-        onMenuPressed: () {
-          _scaffoldKey.currentState?.openDrawer();
-        },
-      ),
-      drawer: AppSidebar(
-        onDashboardSelected: () {
-          Navigator.pop(context);
-          // Navigate to dashboard
-        },
-        onPerformanceSelected: () {
-          Navigator.pop(context);
-          // Navigate to performance page
-        },
-      ),      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Career Opportunities',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Career & Skills',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildSkillSection(context),
+                    SizedBox(height: 24.h),
+                    _buildCareerSection(context),
+                  ],
                 ),
               ),
-              SizedBox(height: 20.h),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildCareerCard(
-                        context,
-                        'Software Engineering',
-                        'Build innovative software solutions',
-                        Icons.computer,
-                        const Color(0xFF6B9B8A),
-                      ),
-                      SizedBox(height: 16.h),
-                      _buildCareerCard(
-                        context,
-                        'Data Science',
-                        'Analyze and interpret complex data',
-                        Icons.analytics,
-                        const Color(0xFF9BC9B8),
-                      ),
-                      SizedBox(height: 16.h),
-                      _buildCareerCard(
-                        context,
-                        'Product Management',
-                        'Lead product development initiatives',
-                        Icons.inventory,
-                        const Color(0xFFE8A87C),
-                      ),
-                      SizedBox(height: 16.h),
-                      _buildCareerCard(
-                        context,
-                        'UX/UI Design',
-                        'Create intuitive user experiences',
-                        Icons.design_services,
-                        const Color(0xFF6B9B8A),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildCareerCard(
-    BuildContext context,
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildSkillSection(BuildContext context) {
+    final skills = [
+      {'name': 'Programming', 'level': 0.85, 'color': Colors.blue},
+      {'name': 'Problem Solving', 'level': 0.75, 'color': Colors.green},
+      {'name': 'Mathematics', 'level': 0.90, 'color': Colors.orange},
+      {'name': 'Communication', 'level': 0.70, 'color': Colors.purple},
+    ];
+
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: InkWell(
-        onTap: () {
-          // Navigate to career details
-        },
-        borderRadius: BorderRadius.circular(12.r),
-        child: Padding(
-          padding: EdgeInsets.all(20.w),
-          child: Row(
-            children: [
-              Container(
-                width: 60.w,
-                height: 60.w,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 30.sp,
-                ),
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Skill Profile',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(width: 20.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+            ),
+            SizedBox(height: 16.h),
+            ...skills.map((skill) => Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [          Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          skill['name'] as String,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      description,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      SizedBox(width: 8.w),
+                      Text(
+                        '${((skill['level'] as double) * 100).toInt()}%',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                  SizedBox(height: 4.h),
+                  LinearProgressIndicator(
+                    value: skill['level'] as double,
+                    backgroundColor: (skill['color'] as Color).withOpacity(0.2),
+                    valueColor: AlwaysStoppedAnimation<Color>(skill['color'] as Color),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                size: 16.sp,
-              ),
-            ],
-          ),
+            )).toList(),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildCareerSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Career Readiness',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            _buildReadinessItem(context, 'Resume', 'Complete', Colors.green),
+            _buildReadinessItem(context, 'Portfolio', 'In Progress', Colors.orange),
+            _buildReadinessItem(context, 'Interview Skills', 'Needs Work', Colors.red),
+            _buildReadinessItem(context, 'Technical Skills', 'Strong', Colors.blue),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReadinessItem(BuildContext context, String title, String status, Color color) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          SizedBox(width: 8.w),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Text(
+              status,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

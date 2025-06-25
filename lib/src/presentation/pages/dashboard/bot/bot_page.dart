@@ -1,224 +1,121 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../widgets/app_sidebar.dart';
-import '../../../widgets/custom_app_bar.dart';
 
-class BotPage extends ConsumerStatefulWidget {
+class BotPage extends StatelessWidget {
   const BotPage({super.key});
 
   @override
-  ConsumerState<BotPage> createState() => _BotPageState();
-}
-
-class _BotPageState extends ConsumerState<BotPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final TextEditingController _messageController = TextEditingController();
-  final List<ChatMessage> _messages = [
-    ChatMessage(
-      text: "Hello! I'm your academic assistant. How can I help you today?",
-      isBot: true,
-      timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-    ),
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,      appBar: CustomAppBar(
-        title: 'Academic Assistant',
-        onMenuPressed: () {
-          _scaffoldKey.currentState?.openDrawer();
-        },
-      ),
-      drawer: AppSidebar(
-        onDashboardSelected: () {
-          Navigator.pop(context);
-          // Navigate to dashboard
-        },
-        onPerformanceSelected: () {
-          Navigator.pop(context);
-          // Navigate to performance page
-        },
-      ),      body: SafeArea(
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.all(16.w),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'AI Assistant',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 20.h),
             Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _buildMessageBubble(_messages[index]);
-                },
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primaryContainer,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(12.r),
+                                topRight: Radius.circular(12.r),
+                              ),
+                            ),
+                            child: Text(
+                              'Chat with AI Assistant',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.w),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.smart_toy,
+                                    size: 64.sp,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Text(
+                                    'Hi! I\'m your AI study assistant.',
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'Ask me questions about your courses, study tips, or career advice!',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Type your message...',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24.r),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 12.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      FloatingActionButton(
+                        onPressed: () {
+                          // Handle send message
+                        },
+                        child: const Icon(Icons.send),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            _buildMessageInput(),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildMessageBubble(ChatMessage message) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: message.isBot 
-            ? MainAxisAlignment.start 
-            : MainAxisAlignment.end,
-        children: [
-          if (message.isBot) ...[
-            Container(
-              width: 32.w,
-              height: 32.w,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Icon(
-                Icons.smart_toy,
-                color: Colors.white,
-                size: 16.sp,
-              ),
-            ),
-            SizedBox(width: 8.w),
-          ],
-          Flexible(
-            child: Container(
-              padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: message.isBot
-                    ? Theme.of(context).colorScheme.surface
-                    : Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(12.r),
-                border: message.isBot
-                    ? Border.all(
-                        color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
-                      )
-                    : null,
-              ),
-              child: Text(
-                message.text,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: message.isBot
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Colors.white,
-                ),
-              ),
-            ),
-          ),
-          if (!message.isBot) ...[
-            SizedBox(width: 8.w),
-            Container(
-              width: 32.w,
-              height: 32.w,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 16.sp,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageInput() {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Type your message...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24.r),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Theme.of(context).colorScheme.background,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16.w,
-                  vertical: 12.h,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(24.r),
-            ),
-            child: IconButton(
-              onPressed: _sendMessage,
-              icon: const Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _sendMessage() {
-    if (_messageController.text.trim().isEmpty) return;
-
-    setState(() {
-      _messages.add(ChatMessage(
-        text: _messageController.text,
-        isBot: false,
-        timestamp: DateTime.now(),
-      ));
-    });
-
-    // Simulate bot response
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        _messages.add(ChatMessage(
-          text: "I understand your question. Let me help you with that!",
-          isBot: true,
-          timestamp: DateTime.now(),
-        ));
-      });
-    });
-
-    _messageController.clear();
-  }
-
-  @override
-  void dispose() {
-    _messageController.dispose();
-    super.dispose();
-  }
-}
-
-class ChatMessage {
-  final String text;
-  final bool isBot;
-  final DateTime timestamp;
-
-  ChatMessage({
-    required this.text,
-    required this.isBot,
-    required this.timestamp,
-  });
 }
