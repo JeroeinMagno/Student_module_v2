@@ -258,8 +258,7 @@ class _AppDrawerState extends State<AppDrawer> {
         ],
       ),
     );
-  }
-  Widget _buildClickableExpandableSection({
+  }  Widget _buildClickableExpandableSection({
     required BuildContext context,
     required String title,
     required IconData icon,
@@ -282,7 +281,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 leading: Icon(
                   isSelected ? selectedIcon : icon,
                   color: isSelected 
-                      ? theme.colorScheme.primary 
+                      ? const Color(0xFFEF4444)
                       : theme.colorScheme.onSurface.withOpacity(0.8),
                   size: 22.sp,
                 ),
@@ -291,7 +290,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                     color: isSelected 
-                        ? theme.colorScheme.primary 
+                        ? const Color(0xFFEF4444)
                         : theme.colorScheme.onSurface,
                     fontSize: 16.sp,
                   ),
@@ -329,17 +328,15 @@ class _AppDrawerState extends State<AppDrawer> {
       child: ListTile(
         leading: Container(
           width: 6.w,
-          height: 20.h,
-          decoration: BoxDecoration(
-            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+          height: 20.h,          decoration: BoxDecoration(
+            color: isSelected ? const Color(0xFFEF4444) : Colors.transparent,
             borderRadius: BorderRadius.circular(3.r),
           ),
         ),
         title: Row(
           children: [            Icon(
-              icon,
-              color: isSelected 
-                  ? theme.colorScheme.primary 
+              icon,              color: isSelected 
+                  ? const Color(0xFFEF4444)
                   : theme.colorScheme.onSurface.withOpacity(0.7),
               size: 18.sp,
             ),
@@ -347,9 +344,8 @@ class _AppDrawerState extends State<AppDrawer> {
             Text(
               title,
               style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected 
-                    ? theme.colorScheme.primary 
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,                color: isSelected 
+                    ? const Color(0xFFEF4444)
                     : theme.colorScheme.onSurface.withOpacity(0.9),
                 fontSize: 14.sp,
               ),
@@ -375,7 +371,7 @@ class _AppDrawerState extends State<AppDrawer> {
       leading: Icon(
         isSelected ? selectedIcon : icon,
         color: isSelected 
-            ? theme.colorScheme.primary 
+            ? const Color(0xFFEF4444)
             : theme.colorScheme.onSurface.withOpacity(0.8),
         size: 22.sp,
       ),
@@ -384,7 +380,7 @@ class _AppDrawerState extends State<AppDrawer> {
         style: theme.textTheme.bodyMedium?.copyWith(
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
           color: isSelected 
-              ? theme.colorScheme.primary 
+              ? const Color(0xFFEF4444)
               : theme.colorScheme.onSurface,
           fontSize: 16.sp,
         ),

@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'app_colors.dart';
 
 class AppTheme {
-  // Colors matching the web system
-  static const Color primaryGreen = Color(0xFF6B9B8A);
-  static const Color backgroundLight = Color(0xFFFAFAFA);
-  static const Color backgroundDark = Color(0xFF121212);
-  static const Color cardLight = Color(0xFFFFFFFF);
-  static const Color cardDark = Color(0xFF1E1E1E);
-  static const Color mutedLight = Color(0xFFF5F5F5);
-  static const Color mutedDark = Color(0xFF262626);
-  static const Color borderLight = Color(0xFFE5E5E5);
-  static const Color borderDark = Color(0xFF404040);  static const Color textPrimary = Color(0xFF000000);  // Black text for maximum contrast in light mode
-  static const Color textSecondary = Color(0xFF374151);  // Darker secondary text for better readability
-  static const Color destructive = Color(0xFFDC2626);  // Slightly darker red for better contrast
-  static const Color success = Color(0xFF059669);  // Adjusted green for better contrast
-  static const Color warning = Color(0xFFD97706);  // Adjusted warning color
+  // Colors matching the CSS design system
+  static const Color primaryGreen = AppColors.primaryLight; // Using the CSS green primary
+  static const Color backgroundLight = AppColors.backgroundLight;
+  static const Color backgroundDark = AppColors.backgroundDark;
+  static const Color cardLight = AppColors.cardLight;
+  static const Color cardDark = AppColors.cardDark;
+  static const Color mutedLight = AppColors.mutedLight;
+  static const Color mutedDark = AppColors.mutedDark;
+  static const Color borderLight = AppColors.borderLight;
+  static const Color borderDark = AppColors.borderDark;
 
-  // Chart colors with better contrast
+  // Text colors from CSS design system
+  static const Color textPrimary = AppColors.foregroundLight;
+  static const Color textSecondary = AppColors.mutedForegroundLight;
+  static const Color destructive = AppColors.destructiveLight;
+  static const Color success = AppColors.success;
+  static const Color warning = AppColors.warning;
+
+  // Chart colors matching CSS variables
   static const List<Color> chartColors = [
-    Color(0xFF2563EB),  // Darker blue
-    Color(0xFF059669),  // Darker green
-    Color(0xFFD97706),  // Darker amber
-    Color(0xFFDC2626),  // Darker red
-    Color(0xFF7C3AED),  // Darker purple
+    AppColors.chartBlue,
+    AppColors.chartCorrect,
+    AppColors.chartYellow,
+    AppColors.chartRed,
+    AppColors.chartOrange,
   ];
 
-  // Border radius matching web (0.625rem = 10px)
+  // Border radius matching CSS --radius variables (0.625rem = 10px)
   static double get borderRadius => 10.r;
-  static double get borderRadiusSm => 6.r;
-  static double get borderRadiusMd => 8.r;
-  static double get borderRadiusLg => 10.r;
-  static double get borderRadiusXl => 14.r;
-
+  static double get borderRadiusSm => 6.r;  // calc(var(--radius) - 4px)
+  static double get borderRadiusMd => 8.r;  // calc(var(--radius) - 2px)
+  static double get borderRadiusLg => 10.r; // var(--radius)
+  static double get borderRadiusXl => 14.r; // calc(var(--radius) + 4px)
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -47,17 +50,19 @@ class AppTheme {
         outline: borderLight,
         error: destructive,
         primary: primaryGreen,
-        onPrimary: Colors.white,
-        onBackground: textPrimary,
-        onSurface: textPrimary,
-        secondary: textSecondary,
-        onSurfaceVariant: textPrimary,
-        onSecondaryContainer: textPrimary,
+        onPrimary: AppColors.primaryForegroundLight,
+        onBackground: AppColors.foregroundLight,
+        onSurface: AppColors.cardForegroundLight,
+        secondary: AppColors.secondary,
+        onSecondary: AppColors.secondaryForegroundLight,
+        onSurfaceVariant: AppColors.foregroundLight,
+        onSecondaryContainer: AppColors.foregroundLight,
       ),
       scaffoldBackgroundColor: backgroundLight,
       cardTheme: CardThemeData(
         color: cardLight,
-        elevation: 0,
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           side: BorderSide(color: borderLight, width: 1),
@@ -97,33 +102,39 @@ class AppTheme {
       elevatedButtonTheme: _buildElevatedButtonTheme(Brightness.light),
       outlinedButtonTheme: _buildOutlinedButtonTheme(Brightness.light),
       chipTheme: _buildChipTheme(Brightness.light),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Color(0xFFEF4444), // Red color for all progress indicators
+        linearTrackColor: mutedLight,
+        circularTrackColor: mutedLight,
+      ),
     );
   }
-
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       fontFamily: GoogleFonts.inter().fontFamily,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryGreen,
+        seedColor: AppColors.primaryDark,
         brightness: Brightness.dark,
         background: backgroundDark,
         surface: cardDark,
         surfaceContainerHighest: mutedDark,
         outline: borderDark,
-        error: destructive,
-        primary: primaryGreen,
-        onPrimary: Colors.white,
-        onBackground: Colors.white,
-        onSurface: Colors.white,
-        secondary: textSecondary,
-        onSurfaceVariant: Colors.white70,
-        onSecondaryContainer: Colors.white,
+        error: AppColors.destructiveDark,
+        primary: AppColors.primaryDark,
+        onPrimary: AppColors.primaryForegroundDark,
+        onBackground: AppColors.foregroundDark,
+        onSurface: AppColors.cardForegroundDark,
+        secondary: AppColors.secondary,
+        onSecondary: AppColors.secondaryForegroundDark,
+        onSurfaceVariant: AppColors.mutedForegroundDark,
+        onSecondaryContainer: AppColors.foregroundDark,
       ),
       scaffoldBackgroundColor: backgroundDark,
       cardTheme: CardThemeData(
         color: cardDark,
         elevation: 0,
+        shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           side: BorderSide(color: borderDark, width: 1),
@@ -165,13 +176,19 @@ class AppTheme {
       elevatedButtonTheme: _buildElevatedButtonTheme(Brightness.dark),
       outlinedButtonTheme: _buildOutlinedButtonTheme(Brightness.dark),
       chipTheme: _buildChipTheme(Brightness.dark),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Color(0xFFEF4444), // Red color for all progress indicators
+        linearTrackColor: mutedDark,
+        circularTrackColor: mutedDark,
+      ),
     );
-  }
-  static TextTheme _buildTextTheme(Brightness brightness) {
-    final color = brightness == Brightness.light ? textPrimary : Colors.white;
+  }  static TextTheme _buildTextTheme(Brightness brightness) {
+    final color = brightness == Brightness.light 
+        ? AppColors.foregroundLight 
+        : AppColors.foregroundDark;
     final textSecondaryColor = brightness == Brightness.light 
-        ? textSecondary 
-        : Colors.white70;
+        ? AppColors.mutedForegroundLight 
+        : AppColors.mutedForegroundDark;
     
     return TextTheme(
       displayLarge: GoogleFonts.inter(

@@ -38,15 +38,13 @@ class CourseProgressBar extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 8.h),
-        ClipRRect(
+        SizedBox(height: 8.h),        ClipRRect(
           borderRadius: BorderRadius.circular(2.r),
           child: LinearProgressIndicator(
             value: progress,
             backgroundColor:
-                isDarkMode ? Colors.white10 : Colors.black.withValues(alpha: 0.1),
-            valueColor:
-                AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+                isDarkMode ? Colors.white10 : Colors.black.withValues(alpha: 0.1),            valueColor:
+                AlwaysStoppedAnimation<Color>(const Color(0xFFEF4444)),
             minHeight: 8.h,
           ),
         ),
