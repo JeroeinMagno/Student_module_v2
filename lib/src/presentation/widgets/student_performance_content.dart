@@ -593,14 +593,19 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
                           final actualGwa = 4.0 - value;
                           
                           // Show GWA values with proper labeling
-                          if (actualGwa >= 1.0 && actualGwa <= 3.0) {
-                            String label = actualGwa.toStringAsFixed(1);
+                          if (actualGwa >= 1.0 && actualGwa <= 3.0) {                            String label = actualGwa.toStringAsFixed(1);
                             // Add grade descriptors for key values
-                            if (actualGwa == 1.0) label = '1.0\n(Excellent)';
-                            else if (actualGwa == 1.5) label = '1.5\n(Very Good)';
-                            else if (actualGwa == 2.0) label = '2.0\n(Good)';
-                            else if (actualGwa == 2.5) label = '2.5\n(Fair)';
-                            else if (actualGwa == 3.0) label = '3.0\n(Passing)';
+                            if (actualGwa == 1.0) {
+                              label = '1.0\n(Excellent)';
+                            } else if (actualGwa == 1.5) {
+                              label = '1.5\n(Very Good)';
+                            } else if (actualGwa == 2.0) {
+                              label = '2.0\n(Good)';
+                            } else if (actualGwa == 2.5) {
+                              label = '2.5\n(Fair)';
+                            } else if (actualGwa == 3.0) {
+                              label = '3.0\n(Passing)';
+                            }
                             
                             return Text(
                               label,
