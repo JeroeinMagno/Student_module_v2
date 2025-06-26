@@ -482,7 +482,9 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
                       DataCell(Text(assessment['type'], style: TextStyle(color: textColor))),
                       DataCell(
                         Text(
-                          score != null ? '${score.toStringAsFixed(0)}/${assessment['maxScore'].toStringAsFixed(0)}' : 'TBD',
+                          score != null 
+                              ? '${((score / assessment['maxScore']) * 100).toStringAsFixed(1)}%' 
+                              : 'TBD',
                           style: TextStyle(color: textColor),
                         ),
                       ),
@@ -505,8 +507,6 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
   }
 
   Widget _buildGWATrendCard(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
     // Calculate improvement percentage
     final firstGwa = _gradeTrends.first['gwa'] as double;
     final lastGwa = _gradeTrends.last['gwa'] as double;
@@ -518,7 +518,7 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
       padding: EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
         color: const Color(0xFF1A2332),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
         border: Border.all(
           color: const Color(0xFF2A3441),
           width: 1,
@@ -555,7 +555,7 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
                 ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF22C55E).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
+                  borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSM),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -602,8 +602,10 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
                       reservedSize: 40.w,
                       interval: 0.5,
                       getTitlesWidget: (value, meta) {
+                        // Invert the displayed value so it shows correct GWA (1.0 at top, 3.0 at bottom)
+                        final actualGwa = 4.0 - value;
                         return Text(
-                          value.toStringAsFixed(1),
+                          actualGwa.toStringAsFixed(1),
                           style: AppTextStyles.caption.copyWith(
                             color: Colors.white.withOpacity(0.6),
                           ),
@@ -654,7 +656,9 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
                 lineBarsData: [
                   LineChartBarData(
                     spots: _gradeTrends.asMap().entries.map((entry) {
-                      return FlSpot(entry.key.toDouble(), entry.value['gwa'].toDouble());
+                      // Invert the GWA values so 1.0 appears at top and 3.0 at bottom
+                      final invertedGwa = 4.0 - entry.value['gwa'].toDouble();
+                      return FlSpot(entry.key.toDouble(), invertedGwa);
                     }).toList(),
                     isCurved: true,
                     curveSmoothness: 0.3,

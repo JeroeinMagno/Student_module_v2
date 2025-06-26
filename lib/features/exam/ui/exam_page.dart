@@ -254,7 +254,7 @@ class _ExamPageContentState extends State<_ExamPageContent> {
                     if (exam.score != null) ...[
                       SizedBox(height: 4.h),
                       Text(
-                        'Score: ${exam.score}/${exam.maxScore} (${exam.percentage?.toStringAsFixed(1)}%)',
+                        'Score: ${exam.percentage?.toStringAsFixed(1)}%',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: statusColor,
                           fontWeight: FontWeight.w600,

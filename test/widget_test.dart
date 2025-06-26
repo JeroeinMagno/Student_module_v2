@@ -16,5 +16,8 @@ void main() {
 
     // Verify that the app loads without errors
     expect(find.byType(MaterialApp), findsOneWidget);
+    
+    // Wait for any pending timers to complete
+    await tester.pumpAndSettle();
   });
 }

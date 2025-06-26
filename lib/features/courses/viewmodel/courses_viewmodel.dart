@@ -72,20 +72,20 @@ class CoursesViewModel extends ChangeNotifier {
 
   Course _mapToCourse(Map<String, dynamic> data) {
     return Course(
-      id: data['id'] as String,
-      name: data['name'] as String,
-      code: data['code'] as String,
-      progress: (data['progress'] as num).toDouble(),
-      color: _getCourseColor(data['code']),
-      professor: data['professor'] as String,
-      description: data['description'] as String,
-      semester: data['semester'] as String,
-      academicYear: data['academicYear'] as String,
-      units: data['units'] as int,
+      id: data['id']?.toString() ?? '',
+      name: data['name']?.toString() ?? 'Unknown Course',
+      code: data['code']?.toString() ?? 'N/A',
+      progress: data['progress'] != null ? (data['progress'] as num).toDouble() : 0.0,
+      color: _getCourseColor(data['code']?.toString() ?? 'default'),
+      professor: data['professor']?.toString() ?? 'TBD',
+      description: data['description']?.toString() ?? 'No description available',
+      semester: data['semester']?.toString() ?? 'N/A',
+      academicYear: data['academicYear']?.toString() ?? 'N/A',
+      units: data['units'] != null ? data['units'] as int : 3,
       grade: data['grade'] != null ? (data['grade'] as num).toDouble() : null,
-      status: data['status'] as String?,
-      schedule: data['schedule'] as String?,
-      room: data['room'] as String?,
+      status: data['status']?.toString(),
+      schedule: data['schedule']?.toString(),
+      room: data['room']?.toString(),
       prerequisites: data['prerequisites'] != null
           ? List<String>.from(data['prerequisites'])
           : null,

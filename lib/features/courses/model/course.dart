@@ -39,26 +39,26 @@ class Course {
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      code: json['code'] as String,
-      progress: (json['progress'] as num).toDouble(),
-      color: Color(json['color'] as int),
-      professor: json['professor'] as String,
-      description: json['description'] as String,
-      semester: json['semester'] as String,
-      academicYear: json['academicYear'] as String,
-      units: json['units'] as int,
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? 'Unknown Course',
+      code: json['code']?.toString() ?? 'N/A',
+      progress: json['progress'] != null ? (json['progress'] as num).toDouble() : 0.0,
+      color: Color(json['color'] as int? ?? 0xFF2196F3),
+      professor: json['professor']?.toString() ?? 'TBD',
+      description: json['description']?.toString() ?? 'No description available',
+      semester: json['semester']?.toString() ?? 'N/A',
+      academicYear: json['academicYear']?.toString() ?? 'N/A',
+      units: json['units'] as int? ?? 3,
       grade: json['grade'] != null ? (json['grade'] as num).toDouble() : null,
-      status: json['status'] as String?,
+      status: json['status']?.toString(),
       enrollmentDate: json['enrollmentDate'] != null 
           ? DateTime.parse(json['enrollmentDate']) 
           : null,
       prerequisites: json['prerequisites'] != null
           ? List<String>.from(json['prerequisites'])
           : null,
-      schedule: json['schedule'] as String?,
-      room: json['room'] as String?,
+      schedule: json['schedule']?.toString(),
+      room: json['room']?.toString(),
     );
   }
 

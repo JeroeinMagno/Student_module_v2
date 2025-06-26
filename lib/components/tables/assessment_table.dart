@@ -344,7 +344,7 @@ class _AssessmentTableState extends State<AssessmentTable> {
                     ],
                     Text(
                       isCompleted 
-                          ? '${score.toStringAsFixed(0)}/${assessment['maxScore']?.toStringAsFixed(0) ?? '100'}'
+                          ? '${((score / (assessment['maxScore'] ?? 100)) * 100).toStringAsFixed(1)}%'
                           : 'TBD',
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: isCompleted ? _getGradeColor(score) : null,
