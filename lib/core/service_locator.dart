@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import '../services/api/api_services.dart';
-import '../services/data_service.dart';
+import '../data/datasources/datasources.dart';
+import '../data/repositories/repositories.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 
@@ -13,7 +13,7 @@ void initializeServices({bool useMockData = true}) {
     serviceLocator.registerLazySingleton<BaseApiService>(() => DioApiService());
   }
   
-  // Register specific API services
+  // Register datasources
   serviceLocator.registerLazySingleton<StudentApiService>(
     () => StudentApiService(serviceLocator<BaseApiService>()),
   );
@@ -34,23 +34,38 @@ void initializeServices({bool useMockData = true}) {
     () => CareerApiService(serviceLocator<BaseApiService>()),
   );
   
-  // Register Auth API service (doesn't follow the same pattern as others)
+  // Register Auth datasource
   if (useMockData) {
     serviceLocator.registerLazySingleton<AuthApiService>(() => MockAuthApiService());
   } else {
-    // TODO: Implement real auth API service
-    serviceLocator.registerLazySingleton<AuthApiService>(() => MockAuthApiService());
+    serviceLocator.registerLazySingleton<AuthApiService>(() => AuthApiServiceImpl());
   }
   
-  // Register centralized data service
-  serviceLocator.registerLazySingleton<DataService>(
-    () => DataService(
-      studentApi: serviceLocator<StudentApiService>(),
-      courseApi: serviceLocator<CourseApiService>(),
-      assessmentApi: serviceLocator<AssessmentApiService>(),
-      analyticsApi: serviceLocator<AnalyticsApiService>(),
-      careerApi: serviceLocator<CareerApiService>(),
-    ),
+  // Register repositories
+  serviceLocator.registerLazySingleton<AuthRepository>(
+    () => useMockData 
+        ? MockAuthRepository()
+        : AuthRepositoryImpl(serviceLocator<AuthApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<StudentRepository>(
+    () => StudentRepositoryImpl(serviceLocator<StudentApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<CourseRepository>(
+    () => CourseRepositoryImpl(serviceLocator<CourseApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<AssessmentRepository>(
+    () => AssessmentRepositoryImpl(serviceLocator<AssessmentApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<AnalyticsRepository>(
+    () => AnalyticsRepositoryImpl(serviceLocator<AnalyticsApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<CareerRepository>(
+    () => CareerRepositoryImpl(serviceLocator<CareerApiService>()),
   );
 }
 
@@ -77,15 +92,21 @@ void switchToRealData() {
 }
 
 void _refreshDependentServices() {
-  // Unregister and re-register services that depend on BaseApiService
+  // Unregister and re-register datasources that depend on BaseApiService
   serviceLocator.unregister<StudentApiService>();
   serviceLocator.unregister<CourseApiService>();
   serviceLocator.unregister<AssessmentApiService>();
   serviceLocator.unregister<AnalyticsApiService>();
   serviceLocator.unregister<CareerApiService>();
-  serviceLocator.unregister<DataService>();
   
-  // Re-register with new BaseApiService
+  // Unregister repositories
+  serviceLocator.unregister<StudentRepository>();
+  serviceLocator.unregister<CourseRepository>();
+  serviceLocator.unregister<AssessmentRepository>();
+  serviceLocator.unregister<AnalyticsRepository>();
+  serviceLocator.unregister<CareerRepository>();
+  
+  // Re-register datasources with new BaseApiService
   serviceLocator.registerLazySingleton<StudentApiService>(
     () => StudentApiService(serviceLocator<BaseApiService>()),
   );
@@ -106,13 +127,24 @@ void _refreshDependentServices() {
     () => CareerApiService(serviceLocator<BaseApiService>()),
   );
   
-  serviceLocator.registerLazySingleton<DataService>(
-    () => DataService(
-      studentApi: serviceLocator<StudentApiService>(),
-      courseApi: serviceLocator<CourseApiService>(),
-      assessmentApi: serviceLocator<AssessmentApiService>(),
-      analyticsApi: serviceLocator<AnalyticsApiService>(),
-      careerApi: serviceLocator<CareerApiService>(),
-    ),
+  // Re-register repositories
+  serviceLocator.registerLazySingleton<StudentRepository>(
+    () => StudentRepositoryImpl(serviceLocator<StudentApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<CourseRepository>(
+    () => CourseRepositoryImpl(serviceLocator<CourseApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<AssessmentRepository>(
+    () => AssessmentRepositoryImpl(serviceLocator<AssessmentApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<AnalyticsRepository>(
+    () => AnalyticsRepositoryImpl(serviceLocator<AnalyticsApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<CareerRepository>(
+    () => CareerRepositoryImpl(serviceLocator<CareerApiService>()),
   );
 }

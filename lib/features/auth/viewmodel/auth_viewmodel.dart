@@ -35,12 +35,7 @@ class AuthViewModel extends ChangeNotifier {
   /// Attempt to login with email and password
   Future<void> login(String email, String password) async {
     if (email.trim().isEmpty || password.trim().isEmpty) {
-      _setError('Please enter both email and password');
-      return;
-    }
-
-    if (!_isValidEmail(email)) {
-      _setError('Please enter a valid email address');
+      _setError('Please enter both username and password');
       return;
     }
 
@@ -55,13 +50,30 @@ class AuthViewModel extends ChangeNotifier {
       final loginRequest = LoginRequest(email: email.trim(), password: password);
       final authResponse = await _authApiService.login(loginRequest);
       
-      _user = authResponse.user;
-      _setStatus(AuthStatus.authenticated);
-      
-      // Save authentication state if needed
-      await _saveAuthState(authResponse);
+      // Check if login was successful - look for access_token or token or successful status
+      if (authResponse.effectiveToken != null || authResponse.user != null) {
+        if (kDebugMode) {
+          print("Login successful, redirecting to dashboard...");
+        }
+        
+        _user = authResponse.user;
+        _setStatus(AuthStatus.authenticated);
+        
+        // Save authentication state if needed
+        await _saveAuthState(authResponse);
+        
+        // Show success message (you can use your preferred toast/snackbar method)
+        if (kDebugMode) {
+          print("Login successful! Redirecting to dashboard...");
+        }
+      } else {
+        throw Exception("Login failed: Invalid response from server");
+      }
       
     } catch (e) {
+      if (kDebugMode) {
+        print("Login error: $e");
+      }
       _setError(_getErrorMessage(e));
       _setStatus(AuthStatus.error);
     }

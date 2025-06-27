@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// Typography constants for consistent text styling
 class AppTextStyles {
   AppTextStyles._();
 
-  // Base font family
-  static TextStyle get _baseTextStyle => GoogleFonts.inter();
+  // Base font family - using system default fonts
+  static const TextStyle _baseTextStyle = TextStyle();
 
   // Headings
   static TextStyle get heading1 => _baseTextStyle.copyWith(

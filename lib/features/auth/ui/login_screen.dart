@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import '../../../constants/constants.dart';
-import '../../../components/components.dart';
 import '../viewmodel/auth_viewmodel.dart';
 
-/// Login screen for user authentication
+/// Login screen for user authentication - matches web design
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -16,9 +15,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   late AuthViewModel _authViewModel;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     _authViewModel.dispose();
     super.dispose();
@@ -36,41 +36,51 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _handleLogin() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      
       _authViewModel.clearError();
       
       await _authViewModel.login(
-        _emailController.text.trim(),
+        _usernameController.text.trim(),
         _passwordController.text,
       );
 
+      setState(() {
+        _isLoading = false;
+      });
+
       if (_authViewModel.isAuthenticated && mounted) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successful! Redirecting to dashboard...'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        
         // Navigate to dashboard on successful login
         context.go('/dashboard');
+      } else if (_authViewModel.errorMessage != null && mounted) {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(_authViewModel.errorMessage!),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }
 
-  Future<void> _handleForgotPassword() async {
-    final email = _emailController.text.trim();
-    
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your email address first'),
-        ),
-      );
-      return;
-    }
-
-    await _authViewModel.forgotPassword(email);
-    
-    if (mounted && _authViewModel.errorMessage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password reset link sent to your email'),
-        ),
-      );
-    }
+  void _handleForgotPassword() {
+    // Handle forgot password logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Forgot password feature will be implemented soon'),
+      ),
+    );
   }
 
   @override
@@ -78,119 +88,140 @@ class _LoginScreenState extends State<LoginScreen> {
     return ChangeNotifierProvider.value(
       value: _authViewModel,
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: const Color(0xFFF5F5F5),
         body: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isLandscape = constraints.maxWidth > constraints.maxHeight;
-              final maxWidth = isLandscape 
-                  ? constraints.maxWidth * 0.5 
-                  : constraints.maxWidth * 0.9;
-              
-              return Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppDimensions.paddingLG,
-                    vertical: AppDimensions.paddingMD,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: maxWidth.clamp(280.w, 400.w),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 400.w),
+                padding: EdgeInsets.all(32.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _buildLogo(isLandscape),
-                          SizedBox(height: isLandscape ? 24.h : 48.h),
-                          _buildTitle(isLandscape),
-                          SizedBox(height: 8.h),
-                          _buildSubtitle(),
-                          SizedBox(height: isLandscape ? 24.h : 48.h),
-                          _buildEmailField(),
-                          SizedBox(height: AppDimensions.paddingMD),
-                          _buildPasswordField(),
-                          SizedBox(height: AppDimensions.paddingLG),
-                          _buildLoginButton(),
-                          SizedBox(height: AppDimensions.paddingMD),
-                          _buildForgotPasswordButton(),
-                        ],
-                      ),
-                    ),
+                  ],
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildLogo(),
+                      SizedBox(height: 32.h),
+                      _buildWelcomeText(),
+                      SizedBox(height: 8.h),
+                      _buildSubtitle(),
+                      SizedBox(height: 32.h),
+                      _buildUsernameField(),
+                      SizedBox(height: 16.h),
+                      _buildPasswordField(),
+                      SizedBox(height: 8.h),
+                      _buildForgotPasswordLink(),
+                      SizedBox(height: 24.h),
+                      _buildCaptchaPlaceholder(),
+                      SizedBox(height: 24.h),
+                      _buildSignInButton(),
+                    ],
                   ),
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildLogo(bool isLandscape) {
-    return SizedBox(
-      height: isLandscape ? 80.h : 120.h,
-      child: Icon(
-        Icons.school,
-        size: isLandscape ? 60.sp : 80.sp,
-        color: AppColors.primary,
+  Widget _buildLogo() {
+    return Container(
+      width: 80.w,
+      height: 80.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        border: Border.all(color: Colors.red.shade100, width: 2),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.red.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(12.w),
+        child: SvgPicture.asset(
+          'assets/icons/bsulogo.svg',
+          width: 56.w,
+          height: 56.w,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
 
-  Widget _buildTitle(bool isLandscape) {
+  Widget _buildWelcomeText() {
     return Text(
-      AppStrings.appName,
-      style: AppTextStyles.heading2.copyWith(
-        color: AppColors.primary,
+      'Welcome Back',
+      style: TextStyle(
+        fontSize: 28.sp,
         fontWeight: FontWeight.bold,
-        fontSize: isLandscape ? 24.sp : 28.sp,
+        color: Colors.red,
       ),
-      textAlign: TextAlign.center,
     );
   }
 
   Widget _buildSubtitle() {
     return Text(
-      'Sign in to continue',
-      style: AppTextStyles.bodyLarge.copyWith(
-        color: Theme.of(context).colorScheme.onSurfaceVariant,
-        fontSize: 16.sp,
+      'Sign in to your account to continue',
+      style: TextStyle(
+        fontSize: 14.sp,
+        color: Colors.grey[600],
       ),
-      textAlign: TextAlign.center,
     );
   }
 
-  Widget _buildEmailField() {
-    return Consumer<AuthViewModel>(
-      builder: (context, authViewModel, child) {
-        return TextFormField(
-          controller: _emailController,
-          keyboardType: TextInputType.emailAddress,
-          style: TextStyle(fontSize: 16.sp),
-          decoration: InputDecoration(
-            labelText: 'Email',
-            hintText: 'Enter your email',
-            prefixIcon: const Icon(Icons.email_outlined),
-            border: const OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingMD,
-              vertical: AppDimensions.paddingMD,
-            ),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Please enter your email';
-            }
-            if (!value.contains('@')) {
-              return 'Please enter a valid email';
-            }
-            return null;
-          },
-          onChanged: (_) => authViewModel.clearError(),
-        );
+  Widget _buildUsernameField() {
+    return TextFormField(
+      controller: _usernameController,
+      style: TextStyle(fontSize: 16.sp),
+      decoration: InputDecoration(
+        hintText: 'Enter your username',
+        prefixIcon: Icon(
+          Icons.person_outline,
+          size: 20.sp,
+          color: Colors.grey[600],
+        ),
+        filled: true,
+        fillColor: Colors.grey[50],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.r),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
+        ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 16.h,
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Please enter your username';
+        }
+        return null;
       },
     );
   }
@@ -203,21 +234,39 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: authViewModel.obscurePassword,
           style: TextStyle(fontSize: 16.sp),
           decoration: InputDecoration(
-            labelText: 'Password',
             hintText: 'Enter your password',
-            prefixIcon: const Icon(Icons.lock_outlined),
+            prefixIcon: Icon(
+              Icons.lock_outline,
+              size: 20.sp,
+              color: Colors.grey[600],
+            ),
             suffixIcon: IconButton(
               icon: Icon(
                 authViewModel.obscurePassword 
                     ? Icons.visibility 
                     : Icons.visibility_off,
+                size: 20.sp,
+                color: Colors.grey[600],
               ),
               onPressed: authViewModel.togglePasswordVisibility,
             ),
-            border: const OutlineInputBorder(),
+            filled: true,
+            fillColor: Colors.grey[50],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: BorderSide(color: Colors.grey[300]!),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.r),
+              borderSide: const BorderSide(color: Colors.red, width: 2),
+            ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: AppDimensions.paddingMD,
-              vertical: AppDimensions.paddingMD,
+              horizontal: 16.w,
+              vertical: 16.h,
             ),
           ),
           validator: (value) {
@@ -229,60 +278,96 @@ class _LoginScreenState extends State<LoginScreen> {
             }
             return null;
           },
-          onChanged: (_) => authViewModel.clearError(),
         );
       },
     );
   }
 
-  Widget _buildLoginButton() {
-    return Consumer<AuthViewModel>(
-      builder: (context, authViewModel, child) {
-        return SizedBox(
-          height: 48.h,
-          child: AppButton(
-            text: 'Sign In',
-            onPressed: authViewModel.isLoading ? null : _handleLogin,
-            isLoading: authViewModel.isLoading,
+  Widget _buildForgotPasswordLink() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        onPressed: _handleForgotPassword,
+        child: Text(
+          'Forgot your password?',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: Colors.green,
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget _buildForgotPasswordButton() {
-    return Consumer<AuthViewModel>(
-      builder: (context, authViewModel, child) {
-        return Column(
-          children: [
-            TextButton(
-              onPressed: authViewModel.isLoading ? null : _handleForgotPassword,
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(fontSize: 14.sp),
-              ),
+  Widget _buildCaptchaPlaceholder() {
+    return Container(
+      height: 60.h,
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 24.w,
+            height: 24.w,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey[400]!),
+              borderRadius: BorderRadius.circular(4.r),
             ),
-            if (authViewModel.errorMessage != null) ...[
-              SizedBox(height: AppDimensions.paddingSM),
-              Container(
-                padding: EdgeInsets.all(AppDimensions.paddingSM),
-                decoration: BoxDecoration(
-                  color: AppColors.error.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSM),
-                  border: Border.all(color: AppColors.error.withOpacity(0.3)),
+          ),
+          SizedBox(width: 12.w),
+          Text(
+            "I'm not a robot",
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Colors.grey[800],
+            ),
+          ),
+          const Spacer(),
+          Icon(
+            Icons.refresh,
+            size: 20.sp,
+            color: Colors.grey[600],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSignInButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 48.h,
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _handleLogin,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          elevation: 0,
+        ),
+        child: _isLoading
+            ? SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: const CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
-                child: Text(
-                  authViewModel.errorMessage!,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.error,
-                  ),
-                  textAlign: TextAlign.center,
+              )
+            : Text(
+                'Sign In',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ],
-          ],
-        );
-      },
+      ),
     );
   }
 }

@@ -5,34 +5,6 @@ import 'auth_api_service.dart';
 class MockAuthApiService implements AuthApiService {
   static const Duration _mockDelay = Duration(seconds: 1);
   
-  @override
-  String get baseUrl => 'http://localhost:3000/api';
-  
-  @override
-  Map<String, String> get headers => {
-    'Content-Type': 'application/json',
-  };
-  
-  @override
-  Future<T> get<T>(String endpoint, {Map<String, dynamic>? params}) async {
-    throw UnimplementedError('GET not implemented in mock service');
-  }
-  
-  @override
-  Future<T> post<T>(String endpoint, {Map<String, dynamic>? data}) async {
-    throw UnimplementedError('POST not implemented in mock service');
-  }
-  
-  @override
-  Future<T> put<T>(String endpoint, {Map<String, dynamic>? data}) async {
-    throw UnimplementedError('PUT not implemented in mock service');
-  }
-  
-  @override
-  Future<T> delete<T>(String endpoint) async {
-    throw UnimplementedError('DELETE not implemented in mock service');
-  }
-  
   // Mock user data
   static const _mockUser = User(
     id: 'student_123',

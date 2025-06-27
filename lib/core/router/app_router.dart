@@ -7,7 +7,7 @@ import '../../features/splash/ui/splash_page.dart';
 /// App router that matches the original routing structure exactly
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/splash', // Start with splash screen
+    initialLocation: '/splash', // Go directly to login page
     routes: [
       // Splash route
       GoRoute(

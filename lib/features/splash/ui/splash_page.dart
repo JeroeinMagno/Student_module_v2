@@ -22,7 +22,9 @@ class _SplashPageState extends State<SplashPage> {
   _navigateToHome() async {
     await Future.delayed(const Duration(milliseconds: 2000));
     if (mounted) {
+      // Temporarily skip login and go directly to dashboard
       context.go('/dashboard');
+      // context.go('/login'); // Original login route - temporarily disabled
     }
   }
 

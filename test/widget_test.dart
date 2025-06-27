@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile_app_student_module_v2/main.dart';
+import 'package:mobile_app_student_module_v2/core/app/student_module_app.dart';
 
 void main() {
   testWidgets('App creates without errors', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const StudentModuleApp());
 
     // Verify that the app loads without errors
     expect(find.byType(MaterialApp), findsOneWidget);

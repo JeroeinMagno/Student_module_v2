@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../constants/constants.dart';
 
 /// Centralized theme configuration
@@ -22,7 +21,7 @@ class AppTheme {
       dividerTheme: _dividerTheme,
       scaffoldBackgroundColor: AppColors.backgroundLight,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: _getFontFamily(),
     );
   }
 
@@ -42,8 +41,15 @@ class AppTheme {
       dividerTheme: _dividerTheme,
       scaffoldBackgroundColor: AppColors.backgroundDark,
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      fontFamily: GoogleFonts.inter().fontFamily,
+      fontFamily: _getFontFamily(),
     );
+  }
+
+  /// Get font family with fallback support
+  static String? _getFontFamily() {
+    // Don't use Google Fonts when runtime fetching is disabled
+    // Return null to use system default fonts
+    return null;
   }
 
   // Color Schemes
