@@ -1,19 +1,28 @@
 import 'package:get_it/get_it.dart';
 import '../data/datasources/datasources.dart';
 import '../data/repositories/repositories.dart';
+import '../services/data_service.dart';
+import '../services/api/api_services.dart' as api;
 
 final GetIt serviceLocator = GetIt.instance;
 
 /// Initialize all services and dependencies
 void initializeServices({bool useMockData = true}) {
-  // Register base API service
+  // Register base API service for data layer (datasources)
   if (useMockData) {
     serviceLocator.registerLazySingleton<BaseApiService>(() => MockApiService());
   } else {
     serviceLocator.registerLazySingleton<BaseApiService>(() => DioApiService());
   }
+
+  // Register base API service for service layer (DataService dependencies)
+  if (useMockData) {
+    serviceLocator.registerLazySingleton<api.BaseApiService>(() => api.MockApiService());
+  } else {
+    serviceLocator.registerLazySingleton<api.BaseApiService>(() => api.DioApiService());
+  }
   
-  // Register datasources
+  // Register datasource API services (for repositories)
   serviceLocator.registerLazySingleton<StudentApiService>(
     () => StudentApiService(serviceLocator<BaseApiService>()),
   );
@@ -33,13 +42,52 @@ void initializeServices({bool useMockData = true}) {
   serviceLocator.registerLazySingleton<CareerApiService>(
     () => CareerApiService(serviceLocator<BaseApiService>()),
   );
+
+  // Register service layer API services (for DataService)
+  serviceLocator.registerLazySingleton<api.StudentApiService>(
+    () => api.StudentApiService(serviceLocator<api.BaseApiService>()),
+  );
   
-  // Register Auth datasource
+  serviceLocator.registerLazySingleton<api.CourseApiService>(
+    () => api.CourseApiService(serviceLocator<api.BaseApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<api.AssessmentApiService>(
+    () => api.AssessmentApiService(serviceLocator<api.BaseApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<api.AnalyticsApiService>(
+    () => api.AnalyticsApiService(serviceLocator<api.BaseApiService>()),
+  );
+  
+  serviceLocator.registerLazySingleton<api.CareerApiService>(
+    () => api.CareerApiService(serviceLocator<api.BaseApiService>()),
+  );
+  
+  // Register Auth API service for service layer (for AuthViewModel)
+  if (useMockData) {
+    serviceLocator.registerLazySingleton<api.AuthApiService>(() => api.MockAuthApiService());
+  } else {
+    serviceLocator.registerLazySingleton<api.AuthApiService>(() => api.AuthApiServiceImpl());
+  }
+  
+  // Register Auth datasource (for repositories)
   if (useMockData) {
     serviceLocator.registerLazySingleton<AuthApiService>(() => MockAuthApiService());
   } else {
     serviceLocator.registerLazySingleton<AuthApiService>(() => AuthApiServiceImpl());
   }
+
+  // Register DataService (coordinator service)
+  serviceLocator.registerLazySingleton<DataService>(
+    () => DataService(
+      studentApi: serviceLocator<api.StudentApiService>(),
+      courseApi: serviceLocator<api.CourseApiService>(),
+      assessmentApi: serviceLocator<api.AssessmentApiService>(),
+      analyticsApi: serviceLocator<api.AnalyticsApiService>(),
+      careerApi: serviceLocator<api.CareerApiService>(),
+    ),
+  );
   
   // Register repositories
   serviceLocator.registerLazySingleton<AuthRepository>(

@@ -190,9 +190,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildUsernameField() {
     return TextFormField(
       controller: _usernameController,
-      style: TextStyle(fontSize: 16.sp),
+      style: TextStyle(
+        fontSize: 16.sp,
+        color: Colors.black,
+      ),
       decoration: InputDecoration(
         hintText: 'Enter your username',
+        hintStyle: TextStyle(
+          color: Colors.grey[600],
+          fontSize: 16.sp,
+        ),
         prefixIcon: Icon(
           Icons.person_outline,
           size: 20.sp,
@@ -232,9 +239,16 @@ class _LoginScreenState extends State<LoginScreen> {
         return TextFormField(
           controller: _passwordController,
           obscureText: authViewModel.obscurePassword,
-          style: TextStyle(fontSize: 16.sp),
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: Colors.black,
+          ),
           decoration: InputDecoration(
             hintText: 'Enter your password',
+            hintStyle: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16.sp,
+            ),
             prefixIcon: Icon(
               Icons.lock_outline,
               size: 20.sp,
@@ -243,8 +257,8 @@ class _LoginScreenState extends State<LoginScreen> {
             suffixIcon: IconButton(
               icon: Icon(
                 authViewModel.obscurePassword 
-                    ? Icons.visibility 
-                    : Icons.visibility_off,
+                    ? Icons.visibility_off 
+                    : Icons.visibility,
                 size: 20.sp,
                 color: Colors.grey[600],
               ),
