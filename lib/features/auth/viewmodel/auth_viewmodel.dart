@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../../../services/api/api_services.dart' as api;
 import '../../../core/service_locator.dart';
 import '../model/auth_model.dart';
@@ -50,30 +50,15 @@ class AuthViewModel extends ChangeNotifier {
       final loginRequest = LoginRequest(email: email.trim(), password: password);
       final authResponse = await _authApiService.login(loginRequest);
       
-      // Check if login was successful - look for access_token or token or successful status
       if (authResponse.effectiveToken != null || authResponse.user != null) {
-        if (kDebugMode) {
-          print("Login successful, redirecting to dashboard...");
-        }
-        
         _user = authResponse.user;
         _setStatus(AuthStatus.authenticated);
-        
-        // Save authentication state if needed
         await _saveAuthState(authResponse);
-        
-        // Show success message (you can use your preferred toast/snackbar method)
-        if (kDebugMode) {
-          print("Login successful! Redirecting to dashboard...");
-        }
       } else {
         throw Exception("Login failed: Invalid response from server");
       }
       
     } catch (e) {
-      if (kDebugMode) {
-        print("Login error: $e");
-      }
       _setError(_getErrorMessage(e));
       _setStatus(AuthStatus.error);
     }
@@ -173,19 +158,16 @@ class AuthViewModel extends ChangeNotifier {
   }
 
   Future<void> _saveAuthState(AuthResponse authResponse) async {
-    // TODO: Implement secure storage for auth state
-    // For now, this is a placeholder for saving to secure storage
+    // Implementation for secure storage will be added when backend is integrated
   }
 
   Future<AuthResponse?> _loadAuthState() async {
-    // TODO: Implement loading from secure storage
-    // For now, return null (no saved state)
+    // Implementation for loading from secure storage will be added when backend is integrated
     return null;
   }
 
   Future<void> _clearAuthState() async {
-    // TODO: Implement clearing secure storage
-    // For now, this is a placeholder
+    // Implementation for clearing secure storage will be added when backend is integrated
   }
 
   bool _isTokenValid(AuthResponse authResponse) {

@@ -5,6 +5,7 @@ import '../../core/state/providers/student_provider.dart';
 import '../../core/state/providers/courses_provider.dart';
 import '../../core/state/providers/assessments_provider.dart';
 import '../../core/ui/error_boundary.dart';
+import '../../components/states/app_states.dart';
 
 /// Enhanced dashboard screen with comprehensive state management
 class EnhancedDashboardScreen extends ConsumerWidget {
@@ -64,7 +65,7 @@ class _QuickStatsSection extends ConsumerWidget {
     final quickStats = ref.watch(quickStatsProvider);
     
     if (quickStats.isEmpty) {
-      return const LoadingWidget(message: 'Loading dashboard...');
+      return const AppLoading(message: 'Loading dashboard...');
     }
 
     return GridView.count(
@@ -271,7 +272,7 @@ class _CoursesSection extends ConsumerWidget {
                   children: currentCourses.map((course) => _CourseItem(course: course)).toList(),
                 );
               },
-              loading: () => const LoadingWidget(),
+              loading: () => const AppLoading(),
               error: (error, stackTrace) => AsyncErrorWidget(
                 asyncValue: coursesAsync,
                 onRetry: () => ref.read(coursesProvider.notifier).refresh(),

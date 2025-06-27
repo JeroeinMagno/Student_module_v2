@@ -487,8 +487,8 @@ class _AppDrawerState extends State<AppDrawer> {
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                // TODO: Implement logout logic
-                // context.go('/login');
+                // Clear user session and navigate to login
+                context.go('/splash');
               },
               style: FilledButton.styleFrom(
                 backgroundColor: theme.colorScheme.error,

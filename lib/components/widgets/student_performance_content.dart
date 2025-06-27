@@ -90,7 +90,7 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
       setState(() {
         _isLoading = false;
       });
-      debugPrint('Error loading student performance data: $e');
+      // Error occurred during data loading
     }
   }
 

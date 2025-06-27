@@ -125,17 +125,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> saveUserSession(AuthResponse authResponse) async {
     _currentUser = authResponse.user;
     _currentToken = authResponse.effectiveToken;
-    
-    // TODO: Persist to secure storage (shared_preferences, flutter_secure_storage, etc.)
-    // For now, just keep in memory
+    // Secure storage implementation will be added when backend is integrated
   }
   
   @override
   Future<void> clearUserSession() async {
     _currentUser = null;
     _currentToken = null;
-    
-    // TODO: Clear from secure storage
+    // Secure storage cleanup will be added when backend is integrated
   }
 }
 

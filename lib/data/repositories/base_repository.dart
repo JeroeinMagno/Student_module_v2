@@ -61,7 +61,7 @@ class RepositoryResult<T> {
   /// Execute action if successful
   void onSuccess(void Function(T data) action) {
     if (isSuccess && data != null) {
-      action(data!);
+      action(data as T);
     }
   }
   

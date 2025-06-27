@@ -5,7 +5,6 @@
 export 'auth_models.dart';
 
 // Student models
-export 'student_models.dart';
 export 'student_info_models.dart';
 
 // Course models

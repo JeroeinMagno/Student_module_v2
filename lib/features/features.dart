@@ -6,4 +6,3 @@ export 'exam/exam.dart';
 export 'career/career.dart';
 export 'splash/splash.dart';
 export 'chatbot/chatbot.dart';
-export 'student/student.dart';
