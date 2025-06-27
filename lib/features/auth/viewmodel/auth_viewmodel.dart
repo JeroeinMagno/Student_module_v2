@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../services/api/api_services.dart' as api;
+import '../../../services/api/api_services.dart';
 import '../../../core/service_locator.dart';
 import '../model/auth_model.dart';
 
 /// ViewModel for handling authentication logic
 class AuthViewModel extends ChangeNotifier {
-  final api.AuthApiService _authApiService = serviceLocator<api.AuthApiService>();
+  final AuthApiService _authApiService = serviceLocator<AuthApiService>();
   
   AuthStatus _status = AuthStatus.initial;
   User? _user;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../constants/constants.dart';
 import '../../../components/components.dart';
 import '../../../core/utils/responsive_utils.dart';
 import '../../../core/service_locator.dart';
@@ -138,8 +139,8 @@ class _CoursesPageContentState extends State<_CoursesPageContent> {
 
   Widget _buildCourseCard(BuildContext context, Course course) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDarkMode ? const Color(0xFF1F2937) : Colors.white;
-    final borderColor = isDarkMode ? const Color(0xFF374151) : const Color(0xFFE5E7EB);
+    final cardColor = isDarkMode ? AppColors.cardDark : AppColors.card;
+    final borderColor = isDarkMode ? AppColors.borderDark : AppColors.border;
     
     return Container(
       decoration: BoxDecoration(
@@ -148,7 +149,7 @@ class _CoursesPageContentState extends State<_CoursesPageContent> {
         border: Border.all(color: borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.foreground.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -294,8 +295,8 @@ class _CoursesPageContentState extends State<_CoursesPageContent> {
                   style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4ADE80),
-                  foregroundColor: Colors.white,
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.primaryForeground,
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.r),

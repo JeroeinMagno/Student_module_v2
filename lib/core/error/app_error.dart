@@ -1,104 +1,40 @@
-/// Enhanced error model with comprehensive error categorization
-abstract class AppError {
-  const AppError({
-    required this.message,
-    this.code,
-    this.isRetryable = false,
-    this.originalError,
-    this.stackTrace,
-  });
-
+/// Base class for all application errors
+abstract class AppError implements Exception {
+  const AppError(this.message, [this.code]);
+  
   final String message;
   final String? code;
-  final bool isRetryable;
-  final Object? originalError;
-  final StackTrace? stackTrace;
-
+  
   @override
-  String toString() => 'AppError: $message (code: $code)';
+  String toString() => 'AppError: $message${code != null ? ' (Code: $code)' : ''}';
 }
 
+/// Network-related errors
 class NetworkError extends AppError {
-  const NetworkError({
-    required super.message,
-    super.code,
-    super.isRetryable = true,
-    super.originalError,
-    super.stackTrace,
-  });
+  const NetworkError(super.message, [super.code]);
 }
 
-class ServerError extends AppError {
-  const ServerError({
-    required super.message,
-    super.code,
-    this.statusCode,
-    super.isRetryable = false,
-    super.originalError,
-    super.stackTrace,
-  });
-
-  final int? statusCode;
-}
-
-class AuthenticationError extends AppError {
-  const AuthenticationError({
-    required super.message,
-    super.code,
-    super.isRetryable = false,
-    super.originalError,
-    super.stackTrace,
-  });
-}
-
-class AuthorizationError extends AppError {
-  const AuthorizationError({
-    required super.message,
-    super.code,
-    super.isRetryable = false,
-    super.originalError,
-    super.stackTrace,
-  });
-}
-
+/// Validation errors
 class ValidationError extends AppError {
-  const ValidationError({
-    required super.message,
-    super.code,
-    this.fieldErrors,
-    super.originalError,
-    super.stackTrace,
-  });
-
-  final Map<String, String>? fieldErrors;
+  const ValidationError(super.message, [super.code]);
 }
 
-class CacheError extends AppError {
-  const CacheError({
-    required super.message,
-    super.code,
-    super.isRetryable = true,
-    super.originalError,
-    super.stackTrace,
-  });
+/// Authentication errors
+class AuthenticationError extends AppError {
+  const AuthenticationError(super.message, [super.code]);
 }
 
-class UnknownError extends AppError {
-  const UnknownError({
-    required super.message,
-    super.code,
-    super.isRetryable = false,
-    super.originalError,
-    super.stackTrace,
-  });
-}
-
+/// Offline/connectivity errors
 class OfflineError extends AppError {
-  const OfflineError({
-    super.message = 'No internet connection',
-    super.code,
-    super.isRetryable = true,
-    super.originalError,
-    super.stackTrace,
-  });
+  const OfflineError(super.message, [super.code]);
+}
+
+/// Server errors
+class ServerError extends AppError {
+  const ServerError(super.message, [super.code]);
+}
+
+/// Generic application error
+class GenericError extends AppError {
+  const GenericError(super.message, [super.code]);
 }

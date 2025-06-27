@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../services/data_service.dart';
 import '../model/course.dart';
+import '../../../constants/constants.dart';
 
 class CoursesViewModel extends ChangeNotifier {
   final DataService _dataService;
@@ -95,17 +96,7 @@ class CoursesViewModel extends ChangeNotifier {
   Color _getCourseColor(String courseCode) {
     // Generate consistent colors based on course code
     final hash = courseCode.hashCode;
-    final colors = [
-      const Color(0xFF2196F3), // Blue
-      const Color(0xFF4CAF50), // Green
-      const Color(0xFFFF9800), // Orange
-      const Color(0xFF9C27B0), // Purple
-      const Color(0xFFE91E63), // Pink
-      const Color(0xFF00BCD4), // Cyan
-      const Color(0xFF795548), // Brown
-      const Color(0xFF607D8B), // Blue Grey
-    ];
-    return colors[hash.abs() % colors.length];
+    return AppColors.chartColors[hash.abs() % AppColors.chartColors.length];
   }
 
   void updatePeriod(String academicYear, String semester) {

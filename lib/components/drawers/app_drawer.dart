@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../constants/constants.dart';
 
 class AppDrawer extends StatefulWidget {
   final String currentRoute;
@@ -287,7 +288,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 leading: Icon(
                   isSelected ? selectedIcon : icon,
                   color: isSelected 
-                      ? const Color(0xFFEF4444)
+                      ? AppColors.destructive
                       : theme.colorScheme.onSurface.withOpacity(0.8),
                   size: 22.sp,
                 ),
@@ -336,7 +337,7 @@ class _AppDrawerState extends State<AppDrawer> {
           width: 6.w,
           height: 20.h,
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFEF4444) : Colors.transparent,
+            color: isSelected ? AppColors.destructive : Colors.transparent,
             borderRadius: BorderRadius.circular(3.r),
           ),
         ),
@@ -345,7 +346,7 @@ class _AppDrawerState extends State<AppDrawer> {
             Icon(
               icon,
               color: isSelected 
-                  ? const Color(0xFFEF4444)
+                  ? AppColors.destructive
                   : theme.colorScheme.onSurface.withOpacity(0.7),
               size: 18.sp,
             ),
@@ -355,7 +356,7 @@ class _AppDrawerState extends State<AppDrawer> {
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
                 color: isSelected 
-                    ? const Color(0xFFEF4444)
+                    ? AppColors.destructive
                     : theme.colorScheme.onSurface.withOpacity(0.9),
                 fontSize: 14.sp,
               ),

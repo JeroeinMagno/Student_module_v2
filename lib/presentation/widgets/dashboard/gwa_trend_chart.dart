@@ -24,10 +24,10 @@ class GWATrendChart extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: AppDimensions.paddingSM),
       padding: EdgeInsets.all(AppDimensions.paddingLG),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A2332),
+        color: AppColors.getCard(context),
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
         border: Border.all(
-          color: const Color(0xFF2A3441),
+          color: AppColors.getBorder(context),
           width: 1,
         ),
       ),
@@ -43,14 +43,14 @@ class GWATrendChart extends StatelessWidget {
                   Text(
                     'GWA Trend',
                     style: AppTextStyles.heading6.copyWith(
-                      color: Colors.white,
+                      color: AppColors.getForeground(context),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     'Across all semesters',
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: Colors.white.withOpacity(0.6),
+                      color: AppColors.getMutedForeground(context),
                     ),
                   ),
                 ],
@@ -61,7 +61,7 @@ class GWATrendChart extends StatelessWidget {
                   vertical: AppDimensions.paddingXS,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF22C55E).withOpacity(0.1),
+                  color: AppColors.success.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSM),
                 ),
                 child: Row(
@@ -69,14 +69,14 @@ class GWATrendChart extends StatelessWidget {
                   children: [
                     Icon(
                       isImproving ? Icons.trending_up : Icons.trending_down,
-                      color: isImproving ? const Color(0xFF22C55E) : Colors.red,
+                      color: isImproving ? AppColors.success : AppColors.destructive,
                       size: 16,
                     ),
                     SizedBox(width: 4),
                     Text(
                       '${isImproving ? 'Improved' : 'Declined'} by ${improvement.toStringAsFixed(2)}%',
                       style: AppTextStyles.caption.copyWith(
-                        color: isImproving ? const Color(0xFF22C55E) : Colors.red,
+                        color: isImproving ? AppColors.success : AppColors.destructive,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -96,7 +96,7 @@ class GWATrendChart extends StatelessWidget {
                   drawVerticalLine: false,
                   getDrawingHorizontalLine: (value) {
                     return FlLine(
-                      color: const Color(0xFF2A3441),
+                      color: AppColors.getBorder(context),
                       strokeWidth: 1,
                       dashArray: [5, 5],
                     );
@@ -114,7 +114,7 @@ class GWATrendChart extends StatelessWidget {
                         return Text(
                           actualGwa.toStringAsFixed(1),
                           style: AppTextStyles.caption.copyWith(
-                            color: Colors.white.withOpacity(0.6),
+                            color: AppColors.getMutedForeground(context),
                           ),
                         );
                       },
@@ -136,7 +136,7 @@ class GWATrendChart extends StatelessWidget {
                               child: Text(
                                 '${parts[0]} ${parts[1]}\n${parts[2]} ${parts.length > 3 ? parts[3] : ''}',
                                 style: AppTextStyles.caption.copyWith(
-                                  color: Colors.white.withOpacity(0.6),
+                                  color: AppColors.getMutedForeground(context),
                                   fontSize: 10,
                                 ),
                                 textAlign: TextAlign.center,
@@ -146,7 +146,7 @@ class GWATrendChart extends StatelessWidget {
                           return Text(
                             semester,
                             style: AppTextStyles.caption.copyWith(
-                              color: Colors.white.withOpacity(0.6),
+                              color: AppColors.getMutedForeground(context),
                               fontSize: 10,
                             ),
                             textAlign: TextAlign.center,
@@ -169,16 +169,16 @@ class GWATrendChart extends StatelessWidget {
                     }).toList(),
                     isCurved: true,
                     curveSmoothness: 0.3,
-                    color: const Color(0xFF3B82F6),
+                    color: AppColors.info,
                     barWidth: 3,
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 5,
-                          color: const Color(0xFF3B82F6),
+                          color: AppColors.info,
                           strokeWidth: 2,
-                          strokeColor: Colors.white,
+                          strokeColor: AppColors.getForeground(context),
                         );
                       },
                     ),
@@ -195,14 +195,14 @@ class GWATrendChart extends StatelessWidget {
             children: [
               Icon(
                 Icons.trending_up,
-                color: const Color(0xFF22C55E),
+                color: AppColors.success,
                 size: 16,
               ),
               SizedBox(width: 4),
               Text(
                 'GWA improving',
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: const Color(0xFF22C55E),
+                  color: AppColors.success,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -212,7 +212,7 @@ class GWATrendChart extends StatelessWidget {
           Text(
             'Lower GWA means higher academic standing',
             style: AppTextStyles.caption.copyWith(
-              color: Colors.white.withOpacity(0.6),
+              color: AppColors.getMutedForeground(context),
             ),
           ),
         ],

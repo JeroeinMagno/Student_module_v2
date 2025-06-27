@@ -15,7 +15,7 @@ class AssessmentTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final progressBackgroundColor = isDarkMode ? Colors.white10 : Colors.black.withOpacity(0.1);
+    final progressBackgroundColor = isDarkMode ? AppColors.mutedDark : AppColors.muted;
     
     final totalAssessments = assessmentOverview['totalAssessments'] ?? 0;
     final completedAssessments = assessmentOverview['completed'] ?? 0;
@@ -30,7 +30,7 @@ class AssessmentTracker extends StatelessWidget {
             Text(
               'Assessment Tracker',
               style: AppTextStyles.heading6.copyWith(
-                color: isDarkMode ? const Color(0xFF4ADE80) : AppColors.primary,
+                color: isDarkMode ? AppColors.primaryDark : AppColors.primary,
               ),
             ),
             Text(

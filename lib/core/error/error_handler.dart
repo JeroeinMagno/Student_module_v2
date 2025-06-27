@@ -1,174 +1,145 @@
 import 'dart:io';
-import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:logging/logging.dart';
 import 'app_error.dart';
 import 'result.dart';
+import 'failures.dart';
 
-/// Centralized error handler for converting exceptions to AppError
+/// Centralized error handler for the application
 class ErrorHandler {
-  static final _logger = Logger('ErrorHandler');
-
-  /// Converts various exception types to AppError
-  static AppError handleError(Object error, [StackTrace? stackTrace]) {
-    _logger.severe('Error occurred: $error', error, stackTrace);
-
-    return switch (error) {
-      DioException dioError => _handleDioError(dioError, stackTrace),
-      SocketException() => NetworkError(
-          message: 'Network connection failed',
-          code: 'NETWORK_ERROR',
-          originalError: error,
-          stackTrace: stackTrace,
-        ),
-      HttpException httpError => ServerError(
-          message: httpError.message,
-          code: 'HTTP_ERROR',
-          originalError: error,
-          stackTrace: stackTrace,
-        ),
-      FormatException() => ValidationError(
-          message: 'Invalid data format',
-          code: 'FORMAT_ERROR',
-          originalError: error,
-          stackTrace: stackTrace,
-        ),
-      TimeoutException() => NetworkError(
-          message: 'Request timeout',
-          code: 'TIMEOUT',
-          isRetryable: true,
-          originalError: error,
-          stackTrace: stackTrace,
-        ),
-      _ => UnknownError(
-          message: error.toString(),
-          code: 'UNKNOWN_ERROR',
-          originalError: error,
-          stackTrace: stackTrace,
-        ),
-    };
+  /// Convert any error to an AppError
+  static AppError handleError(Object error, StackTrace stackTrace) {
+    if (error is AppError) {
+      return error;
+    }
+    
+    if (error is DioException) {
+      return _handleDioError(error);
+    }
+    
+    if (error is SocketException) {
+      return NetworkError('No internet connection');
+    }
+    
+    if (error is FormatException) {
+      return ValidationError('Invalid data format: ${error.message}');
+    }
+    
+    // Log the error for debugging
+    _logError(error, stackTrace);
+    
+    return GenericError('An unexpected error occurred: ${error.toString()}');
   }
-
-  /// Handles Dio-specific errors
-  static AppError _handleDioError(DioException error, StackTrace? stackTrace) {
+  
+  /// Safely execute an async operation and return a Result
+  static Future<Result<T>> safeCall<T>(Future<T> Function() operation) async {
+    try {
+      final result = await operation();
+      return Result.success(result);
+    } catch (error, stackTrace) {
+      final failure = _convertToFailure(error, stackTrace);
+      return Result.failure(failure);
+    }
+  }
+  
+  /// Convert an error to a Failure
+  static Failure _convertToFailure(Object error, StackTrace stackTrace) {
+    if (error is DioException) {
+      return _handleDioFailure(error);
+    }
+    
+    if (error is SocketException) {
+      return const NetworkFailure('No internet connection');
+    }
+    
+    if (error is FormatException) {
+      return InvalidInputFailure('Invalid data format: ${error.message}');
+    }
+    
+    // Log the error for debugging
+    _logError(error, stackTrace);
+    
+    return UnexpectedFailure('An unexpected error occurred: ${error.toString()}');
+  }
+  
+  static AppError _handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return NetworkError(
-          message: 'Connection timeout',
-          code: 'TIMEOUT',
-          isRetryable: true,
-          originalError: error,
-          stackTrace: stackTrace,
-        );
-
+        return NetworkError('Connection timeout');
+        
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
-        final message = error.response?.data?['message'] ?? 
-                       error.response?.statusMessage ?? 
-                       'Server error occurred';
-
-        return switch (statusCode) {
-          401 => AuthenticationError(
-              message: message,
-              code: 'UNAUTHORIZED',
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-          403 => AuthorizationError(
-              message: message,
-              code: 'FORBIDDEN',
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-          400 => ValidationError(
-              message: message,
-              code: 'BAD_REQUEST',
-              fieldErrors: _extractFieldErrors(error.response?.data),
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-          404 => ServerError(
-              message: 'Resource not found',
-              code: 'NOT_FOUND',
-              statusCode: statusCode,
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-          int statusCode when statusCode >= 500 => ServerError(
-              message: message,
-              code: 'SERVER_ERROR',
-              statusCode: statusCode,
-              isRetryable: true,
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-          _ => ServerError(
-              message: message,
-              code: 'HTTP_ERROR',
-              statusCode: statusCode,
-              originalError: error,
-              stackTrace: stackTrace,
-            ),
-        };
-
-      case DioExceptionType.connectionError:
-        return NetworkError(
-          message: 'No internet connection',
-          code: 'NO_INTERNET',
-          isRetryable: true,
-          originalError: error,
-          stackTrace: stackTrace,
-        );
-
+        switch (statusCode) {
+          case 400:
+            return ValidationError('Bad request');
+          case 401:
+            return AuthenticationError('Authentication failed');
+          case 403:
+            return AuthenticationError('Access denied');
+          case 404:
+            return ServerError('Resource not found');
+          case 500:
+            return ServerError('Internal server error');
+          default:
+            return ServerError('Server error ($statusCode)');
+        }
+        
       case DioExceptionType.cancel:
-        return NetworkError(
-          message: 'Request was cancelled',
-          code: 'CANCELLED',
-          originalError: error,
-          stackTrace: stackTrace,
-        );
-
+        return GenericError('Request was cancelled');
+        
+      case DioExceptionType.connectionError:
+        return NetworkError('Connection failed');
+        
+      case DioExceptionType.badCertificate:
+        return NetworkError('Certificate error');
+        
       case DioExceptionType.unknown:
-      default:
-        return UnknownError(
-          message: error.message ?? 'Unknown error occurred',
-          code: 'UNKNOWN',
-          originalError: error,
-          stackTrace: stackTrace,
-        );
+        return GenericError('Network error: ${error.message}');
     }
   }
-
-  /// Extracts field errors from API response
-  static Map<String, String>? _extractFieldErrors(dynamic responseData) {
-    if (responseData is Map<String, dynamic>) {
-      final errors = responseData['errors'];
-      if (errors is Map<String, dynamic>) {
-        return errors.map((key, value) => MapEntry(key, value.toString()));
-      }
+  
+  static Failure _handleDioFailure(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
+        return const NetworkFailure('Connection timeout');
+        
+      case DioExceptionType.badResponse:
+        final statusCode = error.response?.statusCode;
+        switch (statusCode) {
+          case 400:
+            return const InvalidInputFailure('Bad request');
+          case 401:
+            return const AuthFailure('Authentication failed');
+          case 403:
+            return const AuthorizationFailure('Access denied');
+          case 404:
+            return const NotFoundFailure('Resource not found');
+          case 500:
+            return const ServerFailure('Internal server error');
+          default:
+            return ServerFailure('Server error ($statusCode)');
+        }
+        
+      case DioExceptionType.cancel:
+        return const UnexpectedFailure('Request was cancelled');
+        
+      case DioExceptionType.connectionError:
+        return const NetworkFailure('Connection failed');
+        
+      case DioExceptionType.badCertificate:
+        return const NetworkFailure('Certificate error');
+        
+      case DioExceptionType.unknown:
+        return UnexpectedFailure('Network error: ${error.message}');
     }
-    return null;
   }
-
-  /// Wraps a function call with error handling
-  static Future<Result<T>> safeCall<T>(Future<T> Function() call) async {
-    try {
-      final result = await call();
-      return Success(result);
-    } catch (error, stackTrace) {
-      return Failure(handleError(error, stackTrace));
-    }
-  }
-
-  /// Wraps a synchronous function call with error handling
-  static Result<T> safeSyncCall<T>(T Function() call) {
-    try {
-      final result = call();
-      return Success(result);
-    } catch (error, stackTrace) {
-      return Failure(handleError(error, stackTrace));
-    }
+  
+  static void _logError(Object error, StackTrace stackTrace) {
+    // In a real app, you might want to send this to a logging service
+    print('Error: $error');
+    print('StackTrace: $stackTrace');
   }
 }

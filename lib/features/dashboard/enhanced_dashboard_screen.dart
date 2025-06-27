@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../constants/constants.dart';
 import '../../core/state/providers/dashboard_provider.dart';
 import '../../core/state/providers/student_provider.dart';
 import '../../core/state/providers/courses_provider.dart';
@@ -86,7 +87,7 @@ class _QuickStatsSection extends ConsumerWidget {
           title: 'Credits',
           value: '${quickStats['completed_credits']}/${quickStats['enrolled_credits']}',
           icon: Icons.timeline,
-          color: Colors.blue,
+          color: AppColors.info,
         ),
         _StatCard(
           title: 'Progress',
@@ -98,17 +99,17 @@ class _QuickStatsSection extends ConsumerWidget {
           title: 'Status',
           value: quickStats['academic_status'] as String,
           icon: Icons.flag,
-          color: quickStats['is_on_track'] as bool ? Colors.green : Colors.orange,
+          color: quickStats['is_on_track'] as bool ? AppColors.success : AppColors.warning,
         ),
       ],
     );
   }
 
   Color _getGpaColor(double gpa) {
-    if (gpa >= 3.5) return Colors.green;
-    if (gpa >= 3.0) return Colors.blue;
-    if (gpa >= 2.0) return Colors.orange;
-    return Colors.red;
+    if (gpa >= 3.5) return AppColors.success;
+    if (gpa >= 3.0) return AppColors.info;
+    if (gpa >= 2.0) return AppColors.warning;
+    return AppColors.destructive;
   }
 }
 
@@ -202,15 +203,15 @@ class _AlertItem extends StatelessWidget {
 
     switch (type) {
       case 'error':
-        color = Colors.red;
+        color = AppColors.destructive;
         icon = Icons.error;
         break;
       case 'warning':
-        color = Colors.orange;
+        color = AppColors.warning;
         icon = Icons.warning;
         break;
       default:
-        color = Colors.blue;
+        color = AppColors.info;
         icon = Icons.info;
     }
 
@@ -307,10 +308,10 @@ class _CourseItem extends StatelessWidget {
   }
 
   Color _getGradeColor(double grade) {
-    if (grade >= 3.5) return Colors.green.shade100;
-    if (grade >= 3.0) return Colors.blue.shade100;
-    if (grade >= 2.0) return Colors.orange.shade100;
-    return Colors.red.shade100;
+    if (grade >= 3.5) return AppColors.success.withOpacity(0.1);
+    if (grade >= 3.0) return AppColors.info.withOpacity(0.1);
+    if (grade >= 2.0) return AppColors.warning.withOpacity(0.1);
+    return AppColors.destructive.withOpacity(0.1);
   }
 }
 
@@ -348,7 +349,7 @@ class _AssessmentsSection extends ConsumerWidget {
             if (overdueAssessments.isNotEmpty) ...[
               Text(
                 'Overdue (${overdueAssessments.length})',
-                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                style: TextStyle(color: AppColors.destructive, fontWeight: FontWeight.bold),
               ),
               ...overdueAssessments.take(2).map((assessment) => _AssessmentItem(
                 assessment: assessment,
@@ -391,17 +392,17 @@ class _AssessmentItem extends StatelessWidget {
       title: Text(
         assessment.title,
         style: TextStyle(
-          color: isOverdue ? Colors.red : null,
+          color: isOverdue ? AppColors.destructive : null,
           fontWeight: isOverdue ? FontWeight.bold : null,
         ),
       ),
       subtitle: Text(
         'Due: ${_formatDate(assessment.dueDate)}',
-        style: TextStyle(color: isOverdue ? Colors.red : null),
+        style: TextStyle(color: isOverdue ? AppColors.destructive : null),
       ),
       trailing: Chip(
         label: Text(assessment.type.toUpperCase()),
-        backgroundColor: isOverdue ? Colors.red.shade100 : Colors.blue.shade100,
+        backgroundColor: isOverdue ? AppColors.destructive.withOpacity(0.1) : AppColors.info.withOpacity(0.1),
       ),
     );
   }

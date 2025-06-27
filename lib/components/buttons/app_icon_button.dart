@@ -29,12 +29,12 @@ class AppIconButton extends StatelessWidget {
     final effectiveBackgroundColor = backgroundColor ?? 
         (isSelected 
             ? AppColors.primary.withOpacity(0.1)
-            : (isDark ? AppColors.surfaceDark : AppColors.surfaceLight));
+            : (isDark ? AppColors.cardDark : AppColors.card));
     
     final effectiveIconColor = iconColor ?? 
         (isSelected 
             ? AppColors.primary
-            : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary));
+            : (isDark ? AppColors.foregroundDark : AppColors.foreground));
     
     final button = Container(
       width: buttonSize,
@@ -47,7 +47,7 @@ class AppIconButton extends StatelessWidget {
             : Border.all(
                 color: isDark 
                     ? AppColors.borderDark 
-                    : AppColors.borderLight,
+                    : AppColors.border,
                 width: 1,
               ),
       ),

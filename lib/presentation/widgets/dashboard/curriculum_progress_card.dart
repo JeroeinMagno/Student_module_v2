@@ -33,7 +33,7 @@ class CurriculumProgressCard extends StatelessWidget {
             Text(
               'Curriculum',
               style: AppTextStyles.heading6.copyWith(
-                color: isDarkMode ? const Color(0xFF4ADE80) : AppColors.primary,
+                color: isDarkMode ? AppColors.primaryDark : AppColors.primary,
               ),
             ),
             if (programName != null) ...[
@@ -42,8 +42,8 @@ class CurriculumProgressCard extends StatelessWidget {
                 programName!,
                 style: AppTextStyles.bodySmall.copyWith(
                   color: isDarkMode 
-                      ? Colors.white.withOpacity(0.7) 
-                      : Colors.black.withOpacity(0.7),
+                      ? AppColors.mutedForegroundDark 
+                      : AppColors.mutedForeground,
                 ),
               ),
             ],
@@ -53,7 +53,7 @@ class CurriculumProgressCard extends StatelessWidget {
                 Text(
                   '$totalCourses/$totalRequiredCourses',
                   style: AppTextStyles.heading3.copyWith(
-                    color: isDarkMode ? Colors.white : Colors.black,
+                    color: isDarkMode ? AppColors.foregroundDark : AppColors.foreground,
                   ),
                 ),
                 SizedBox(width: AppDimensions.paddingSM),
@@ -62,8 +62,8 @@ class CurriculumProgressCard extends StatelessWidget {
                     'You completed $progressPercentage% of your curriculum.',
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: isDarkMode 
-                          ? Colors.white.withOpacity(0.7) 
-                          : Colors.black.withOpacity(0.7),
+                          ? AppColors.mutedForegroundDark 
+                          : AppColors.mutedForeground,
                     ),
                   ),
                 ),
@@ -74,8 +74,8 @@ class CurriculumProgressCard extends StatelessWidget {
               '$completedCourses completed, $currentCourses in progress',
               style: AppTextStyles.bodyMedium.copyWith(
                 color: isDarkMode 
-                    ? Colors.white.withOpacity(0.7) 
-                    : Colors.black.withOpacity(0.7),
+                    ? AppColors.mutedForegroundDark 
+                    : AppColors.mutedForeground,
               ),
             ),
           ],

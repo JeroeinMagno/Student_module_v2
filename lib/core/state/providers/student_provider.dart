@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/data_service.dart';
 import '../../../core/service_locator.dart';
 import '../../error/error_handler.dart';
-import '../../error/result.dart';
 import '../../storage/storage_service.dart';
 
 /// Student data model
@@ -87,7 +86,7 @@ class StudentDataNotifier extends StateNotifier<AsyncValue<StudentData>> {
       // Cache the data
       await _storageService.storeStudentData(profile);
       await _storageService.storeCache('program_info', programInfo, 
-          expiration: const Duration(hours: 24));
+          expiry: const Duration(hours: 24));
 
       return StudentData(
         profile: profile,

@@ -29,7 +29,7 @@ class EnrolledUnitsCard extends StatelessWidget {
             Text(
               'Enrolled Units',
               style: AppTextStyles.heading6.copyWith(
-                color: isDarkMode ? const Color(0xFF4ADE80) : AppColors.primary,
+                color: isDarkMode ? AppColors.primaryDark : AppColors.primary,
               ),
             ),
             SizedBox(height: AppDimensions.paddingSM),
@@ -38,7 +38,7 @@ class EnrolledUnitsCard extends StatelessWidget {
                 Text(
                   '$units',
                   style: AppTextStyles.heading1.copyWith(
-                    color: isDarkMode ? Colors.white : Colors.black,
+                    color: isDarkMode ? AppColors.foregroundDark : AppColors.foreground,
                   ),
                 ),
                 const Spacer(),
@@ -47,8 +47,8 @@ class EnrolledUnitsCard extends StatelessWidget {
                     displayDescription,
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: isDarkMode 
-                          ? Colors.white.withOpacity(0.7) 
-                          : Colors.black.withOpacity(0.7),
+                          ? AppColors.mutedForegroundDark 
+                          : AppColors.mutedForeground,
                     ),
                   ),
                 ),

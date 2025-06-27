@@ -30,10 +30,10 @@ class AppCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     
     final cardColor = backgroundColor ?? 
-        (isDark ? AppColors.cardDark : AppColors.cardLight);
+        (isDark ? AppColors.cardDark : AppColors.card);
     
     final cardBorder = border ?? Border.all(
-      color: isDark ? AppColors.borderDark : AppColors.borderLight,
+      color: isDark ? AppColors.borderDark : AppColors.border,
       width: AppDimensions.cardBorderWidth,
     );
 

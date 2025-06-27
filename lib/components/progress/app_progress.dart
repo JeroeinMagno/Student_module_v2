@@ -44,7 +44,7 @@ class AppProgress extends StatelessWidget {
           height: height ?? 8.h,
           decoration: BoxDecoration(
             color: backgroundColor ?? 
-                (isDark ? AppColors.mutedDark : AppColors.mutedLight),
+                (isDark ? AppColors.mutedDark : AppColors.muted),
             borderRadius: BorderRadius.circular(AppDimensions.borderRadiusSM),
           ),
           child: FractionallySizedBox(
@@ -106,7 +106,7 @@ class AppProgressRing extends StatelessWidget {
             value: value,
             strokeWidth: strokeWidth,
             backgroundColor: backgroundColor ?? 
-                (isDark ? AppColors.mutedDark : AppColors.mutedLight),
+                (isDark ? AppColors.mutedDark : AppColors.muted),
             valueColor: AlwaysStoppedAnimation<Color>(
               valueColor ?? AppColors.primary,
             ),

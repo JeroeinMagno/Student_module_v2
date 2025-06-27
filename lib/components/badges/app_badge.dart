@@ -69,8 +69,8 @@ class AppBadge extends StatelessWidget {
         fgColor = AppColors.success;
         break;
       case BadgeVariant.destructive:
-        bgColor = AppColors.error.withOpacity(0.1);
-        fgColor = AppColors.error;
+        bgColor = AppColors.destructive.withOpacity(0.1);
+        fgColor = AppColors.destructive;
         break;
       case BadgeVariant.warning:
         bgColor = AppColors.warning.withOpacity(0.1);
@@ -79,16 +79,16 @@ class AppBadge extends StatelessWidget {
       case BadgeVariant.outline:
         bgColor = Colors.transparent;
         fgColor = isDark 
-            ? AppColors.textPrimaryDark 
-            : AppColors.textPrimary;
+            ? AppColors.foregroundDark 
+            : AppColors.foreground;
         break;
       case BadgeVariant.default_:
         bgColor = isDark 
             ? AppColors.mutedDark 
-            : AppColors.mutedLight;
+            : AppColors.muted;
         fgColor = isDark 
-            ? AppColors.textSecondaryDark 
-            : AppColors.textSecondary;
+            ? AppColors.mutedForegroundDark 
+            : AppColors.mutedForeground;
         break;
     }
 
@@ -104,7 +104,7 @@ class AppBadge extends StatelessWidget {
             ? Border.all(
                 color: isDark 
                     ? AppColors.borderDark 
-                    : AppColors.borderLight,
+                    : AppColors.border,
               )
             : null,
       ),

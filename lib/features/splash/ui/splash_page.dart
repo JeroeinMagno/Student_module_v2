@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import '../../../constants/constants.dart';
 import 'widgets/animated_logo.dart';
 import 'widgets/floating_background_icons.dart';
 import 'widgets/splash_text_content.dart';
@@ -74,15 +75,15 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF1E3A8A),
-              Color(0xFF3B82F6),
-              Color(0xFF6366F1),
-              Color(0xFF8B5CF6),
+              AppColors.info,
+              AppColors.primary,
+              AppColors.secondary,
+              AppColors.warning,
             ],
             stops: [0.0, 0.3, 0.7, 1.0],
           ),

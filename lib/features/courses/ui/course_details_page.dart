@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../constants/constants.dart';
 import '../model/course.dart';
 import '../../../presentation/widgets/course/course_widgets.dart';
 
@@ -13,17 +14,15 @@ class CourseDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
     return Scaffold(
-      backgroundColor: isDarkMode ? const Color(0xFF1A1D29) : const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.getBackground(context),
       appBar: AppBar(
-        backgroundColor: isDarkMode ? const Color(0xFF1A1D29) : const Color(0xFFF8F9FA),
+        backgroundColor: AppColors.getBackground(context),
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: AppColors.getForeground(context),
             size: 24.sp,
           ),
           onPressed: () => Navigator.pop(context),
@@ -36,14 +35,14 @@ class CourseDetailsPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: isDarkMode ? Colors.white : Colors.black,
+                color: AppColors.getForeground(context),
               ),
             ),
             Text(
               course.code,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                color: AppColors.getMutedForeground(context),
               ),
             ),
           ],
@@ -58,8 +57,8 @@ class CourseDetailsPage extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4ADE80),
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.success,
+                foregroundColor: AppColors.successForeground,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r),

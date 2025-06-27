@@ -95,16 +95,7 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
   }
 
   Color _getCourseColor(String courseId) {
-    final colors = [
-      AppColors.primary,
-      AppColors.secondary,
-      const Color(0xFF4CAF50),
-      const Color(0xFFFF9800),
-      const Color(0xFF9C27B0),
-      const Color(0xFF607D8B),
-      const Color(0xFFE91E63),
-    ];
-    return colors[courseId.hashCode % colors.length];
+    return AppColors.chartColors[courseId.hashCode % AppColors.chartColors.length];
   }
 
   List<Map<String, dynamic>> _generateRecentAssessments() {

@@ -29,7 +29,7 @@ class AppSeparator extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final separatorColor = color ?? 
-        (isDark ? AppColors.borderDark : AppColors.borderLight);
+        (isDark ? AppColors.borderDark : AppColors.border);
 
     if (direction == Axis.vertical) {
       return VerticalDivider(

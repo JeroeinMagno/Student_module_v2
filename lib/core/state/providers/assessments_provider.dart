@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../services/data_service.dart';
 import '../../../core/service_locator.dart';
 import '../../error/error_handler.dart';
-import '../../error/result.dart';
 import '../../storage/storage_service.dart';
 import 'student_provider.dart';
 
@@ -168,7 +167,7 @@ class AssessmentsNotifier extends StateNotifier<AsyncValue<List<Assessment>>> {
       await _storageService.storeCache(
         'assessments', 
         assessments.map((a) => a.toJson()).toList(),
-        expiration: const Duration(hours: 2),
+        expiry: const Duration(hours: 2),
       );
 
       return assessments;
@@ -224,7 +223,7 @@ class AssessmentsNotifier extends StateNotifier<AsyncValue<List<Assessment>>> {
       _storageService.storeCache(
         'assessments',
         updatedAssessments.map((a) => a.toJson()).toList(),
-        expiration: const Duration(hours: 2),
+        expiry: const Duration(hours: 2),
       );
     });
   }
@@ -249,7 +248,7 @@ class AssessmentsNotifier extends StateNotifier<AsyncValue<List<Assessment>>> {
       _storageService.storeCache(
         'assessments',
         updatedAssessments.map((a) => a.toJson()).toList(),
-        expiration: const Duration(hours: 2),
+        expiry: const Duration(hours: 2),
       );
     });
   }

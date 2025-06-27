@@ -1,98 +1,126 @@
-import 'app_error.dart';
+import 'failures.dart';
 
-/// Result type for handling success and error cases
-sealed class Result<T> {
+/// Represents a result that can be either a success or a failure
+abstract class Result<T> {
   const Result();
+
+  /// Create a success result
+  const factory Result.success(T data) = Success<T>;
+
+  /// Create a failure result
+  const factory Result.failure(Failure failure) = FailureResult<T>;
+
+  /// Check if this is a success result
+  bool get isSuccess;
+
+  /// Check if this is a failure result
+  bool get isFailure;
+
+  /// Get the data (throws if failure)
+  T get data;
+
+  /// Get the failure (throws if success)
+  Failure get failure;
+
+  /// Get the data or null if failure
+  T? get dataOrNull => isSuccess ? data : null;
+
+  /// Fold the result into a single value
+  R fold<R>(R Function(Failure failure) onFailure, R Function(T data) onSuccess);
+
+  /// Map the success data
+  Result<R> map<R>(R Function(T data) transform);
+
+  /// FlatMap/bind the success data
+  Result<R> flatMap<R>(Result<R> Function(T data) transform);
 }
 
 /// Success result containing data
 class Success<T> extends Result<T> {
-  const Success(this.data);
-  
-  final T data;
+  const Success(this._data);
+
+  final T _data;
 
   @override
-  String toString() => 'Success($data)';
+  bool get isSuccess => true;
+
+  @override
+  bool get isFailure => false;
+
+  @override
+  T get data => _data;
+
+  @override
+  Failure get failure => throw StateError('Cannot get failure from Success');
+
+  @override
+  R fold<R>(R Function(Failure failure) onFailure, R Function(T data) onSuccess) {
+    return onSuccess(_data);
+  }
+
+  @override
+  Result<R> map<R>(R Function(T data) transform) {
+    return Success(transform(_data));
+  }
+
+  @override
+  Result<R> flatMap<R>(Result<R> Function(T data) transform) {
+    return transform(_data);
+  }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Success &&
-          runtimeType == other.runtimeType &&
-          data == other.data;
+      other is Success<T> && _data == other._data;
 
   @override
-  int get hashCode => data.hashCode;
+  int get hashCode => _data.hashCode;
+
+  @override
+  String toString() => 'Success($_data)';
 }
 
-/// Failure result containing error
-class Failure<T> extends Result<T> {
-  const Failure(this.error);
-  
-  final AppError error;
+/// Failure result containing error information
+class FailureResult<T> extends Result<T> {
+  const FailureResult(this._failure);
+
+  final Failure _failure;
 
   @override
-  String toString() => 'Failure($error)';
+  bool get isSuccess => false;
+
+  @override
+  bool get isFailure => true;
+
+  @override
+  T get data => throw StateError('Cannot get data from Failure');
+
+  @override
+  Failure get failure => _failure;
+
+  @override
+  R fold<R>(R Function(Failure failure) onFailure, R Function(T data) onSuccess) {
+    return onFailure(_failure);
+  }
+
+  @override
+  Result<R> map<R>(R Function(T data) transform) {
+    return FailureResult<R>(_failure);
+  }
+
+  @override
+  Result<R> flatMap<R>(Result<R> Function(T data) transform) {
+    return FailureResult<R>(_failure);
+  }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Failure &&
-          runtimeType == other.runtimeType &&
-          error == other.error;
+      other is FailureResult<T> && _failure == other._failure;
 
   @override
-  int get hashCode => error.hashCode;
-}
+  int get hashCode => _failure.hashCode;
 
-/// Extensions for Result type
-extension ResultExtensions<T> on Result<T> {
-  /// Returns true if this is a Success
-  bool get isSuccess => this is Success<T>;
-
-  /// Returns true if this is a Failure
-  bool get isFailure => this is Failure<T>;
-
-  /// Returns the data if Success, null otherwise
-  T? get dataOrNull => switch (this) {
-    Success<T>(data: final data) => data,
-    Failure<T>() => null,
-  };
-
-  /// Returns the error if Failure, null otherwise
-  AppError? get errorOrNull => switch (this) {
-    Success<T>() => null,
-    Failure<T>(error: final error) => error,
-  };
-
-  /// Transforms the data if Success
-  Result<R> map<R>(R Function(T) transform) => switch (this) {
-    Success<T>(data: final data) => Success(transform(data)),
-    Failure<T>(error: final error) => Failure(error),
-  };
-
-  /// Handles both success and failure cases
-  R fold<R>(
-    R Function(AppError) onFailure,
-    R Function(T) onSuccess,
-  ) => switch (this) {
-    Success<T>(data: final data) => onSuccess(data),
-    Failure<T>(error: final error) => onFailure(error),
-  };
-
-  /// Executes action if Success
-  Result<T> onSuccess(void Function(T) action) {
-    if (this is Success<T>) {
-      action((this as Success<T>).data);
-    }
-    return this;
-  }
-
-  /// Executes action if Failure
-  Result<T> onFailure(void Function(AppError) action) {
-    if (this is Failure<T>) {
-      action((this as Failure<T>).error);
-    }
-    return this;
-  }
+  @override
+  String toString() => 'Failure($_failure)';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../../constants/constants.dart';
 import '../../../components/components.dart';
@@ -40,7 +41,21 @@ class _CareerPageContentState extends State<_CareerPageContent> with TickerProvi
     _tabController = TabController(length: 3, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<CareerViewModel>().loadCareerData();
+      _updateStatusBar();
     });
+  }
+
+  void _updateStatusBar() {
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+        statusBarBrightness: isLightMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+      ),
+    );
   }
 
   @override
@@ -51,15 +66,39 @@ class _CareerPageContentState extends State<_CareerPageContent> with TickerProvi
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          _buildHeader(context),
-          _buildTabBar(),
-          Expanded(
-            child: _buildTabBarView(),
-          ),
-        ],
+    final isLightMode = Theme.of(context).brightness == Brightness.light;
+    
+    // Update status bar every time we build to handle theme changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+          statusBarBrightness: isLightMode ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+        ),
+      );
+    });
+    
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+        statusBarBrightness: isLightMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: isLightMode ? Brightness.dark : Brightness.light,
+      ),
+      child: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context),
+            _buildTabBar(),
+            Expanded(
+              child: _buildTabBarView(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -74,7 +113,7 @@ class _CareerPageContentState extends State<_CareerPageContent> with TickerProvi
             'Career & Skills',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: AppColors.getForeground(context),
             ),
           ),
           Consumer<CareerViewModel>(
@@ -105,11 +144,11 @@ class _CareerPageContentState extends State<_CareerPageContent> with TickerProvi
           Tab(text: 'Opportunities'),
           Tab(text: 'Profile'),
         ],
-        labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.textSecondary,
+        labelColor: AppColors.getPrimary(context),
+        unselectedLabelColor: AppColors.getMuted(context),
         indicator: BoxDecoration(
           borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.getPrimary(context).withOpacity(0.1),
         ),
       ),
     );

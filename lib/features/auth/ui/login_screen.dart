@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../viewmodel/auth_viewmodel.dart';
+import '../../../constants/constants.dart';
 
 /// Login screen for user authentication - matches web design
 class LoginScreen extends StatefulWidget {
@@ -54,9 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if (_authViewModel.isAuthenticated && mounted) {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Login successful! Redirecting to dashboard...'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           ),
         );
         
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_authViewModel.errorMessage!),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.destructive,
           ),
         );
       }
@@ -88,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return ChangeNotifierProvider.value(
       value: _authViewModel,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: AppColors.getBackground(context),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -97,11 +98,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 constraints: BoxConstraints(maxWidth: 400.w),
                 padding: EdgeInsets.all(32.w),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.getCard(context),
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: AppColors.getForeground(context).withOpacity(0.1),
                       blurRadius: 20,
                       offset: const Offset(0, 4),
                     ),
@@ -144,11 +145,11 @@ class _LoginScreenState extends State<LoginScreen> {
       height: 80.w,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.white,
-        border: Border.all(color: Colors.red.shade100, width: 2),
+        color: AppColors.getCard(context),
+        border: Border.all(color: AppColors.destructive.withOpacity(0.3), width: 2),
         boxShadow: [
           BoxShadow(
-            color: Colors.red.withOpacity(0.1),
+            color: AppColors.destructive.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -172,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
       style: TextStyle(
         fontSize: 28.sp,
         fontWeight: FontWeight.bold,
-        color: Colors.red,
+        color: AppColors.destructive,
       ),
     );
   }
@@ -182,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
       'Sign in to your account to continue',
       style: TextStyle(
         fontSize: 14.sp,
-        color: Colors.grey[600],
+        color: AppColors.getMutedForeground(context),
       ),
     );
   }
@@ -192,32 +193,32 @@ class _LoginScreenState extends State<LoginScreen> {
       controller: _usernameController,
       style: TextStyle(
         fontSize: 16.sp,
-        color: Colors.black,
+        color: AppColors.getForeground(context),
       ),
       decoration: InputDecoration(
         hintText: 'Enter your username',
         hintStyle: TextStyle(
-          color: Colors.grey[600],
+          color: AppColors.getMutedForeground(context),
           fontSize: 16.sp,
         ),
         prefixIcon: Icon(
           Icons.person_outline,
           size: 20.sp,
-          color: Colors.grey[600],
+          color: AppColors.getMutedForeground(context),
         ),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: AppColors.getMuted(context),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderSide: BorderSide(color: AppColors.getBorder(context)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+          borderSide: BorderSide(color: AppColors.getBorder(context)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
+          borderSide: BorderSide(color: AppColors.destructive, width: 2),
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: 16.w,
@@ -241,18 +242,18 @@ class _LoginScreenState extends State<LoginScreen> {
           obscureText: authViewModel.obscurePassword,
           style: TextStyle(
             fontSize: 16.sp,
-            color: Colors.black,
+            color: AppColors.getForeground(context),
           ),
           decoration: InputDecoration(
             hintText: 'Enter your password',
             hintStyle: TextStyle(
-              color: Colors.grey[600],
+              color: AppColors.getMutedForeground(context),
               fontSize: 16.sp,
             ),
             prefixIcon: Icon(
               Icons.lock_outline,
               size: 20.sp,
-              color: Colors.grey[600],
+              color: AppColors.getMutedForeground(context),
             ),
             suffixIcon: IconButton(
               icon: Icon(
@@ -260,23 +261,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? Icons.visibility_off 
                     : Icons.visibility,
                 size: 20.sp,
-                color: Colors.grey[600],
+                color: AppColors.getMutedForeground(context),
               ),
               onPressed: authViewModel.togglePasswordVisibility,
             ),
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: AppColors.getMuted(context),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(color: AppColors.getBorder(context)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(color: AppColors.getBorder(context)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: const BorderSide(color: Colors.red, width: 2),
+              borderSide: BorderSide(color: AppColors.destructive, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
@@ -306,7 +307,7 @@ class _LoginScreenState extends State<LoginScreen> {
           'Forgot your password?',
           style: TextStyle(
             fontSize: 14.sp,
-            color: Colors.green,
+            color: AppColors.success,
           ),
         ),
       ),
@@ -318,9 +319,9 @@ class _LoginScreenState extends State<LoginScreen> {
       height: 60.h,
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColors.getMuted(context),
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: AppColors.getBorder(context)),
       ),
       child: Row(
         children: [
@@ -328,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
             width: 24.w,
             height: 24.w,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[400]!),
+              border: Border.all(color: AppColors.getBorder(context)),
               borderRadius: BorderRadius.circular(4.r),
             ),
           ),
@@ -337,14 +338,14 @@ class _LoginScreenState extends State<LoginScreen> {
             "I'm not a robot",
             style: TextStyle(
               fontSize: 14.sp,
-              color: Colors.grey[800],
+              color: AppColors.getForeground(context),
             ),
           ),
           const Spacer(),
           Icon(
             Icons.refresh,
             size: 20.sp,
-            color: Colors.grey[600],
+            color: AppColors.getMutedForeground(context),
           ),
         ],
       ),
@@ -358,8 +359,8 @@ class _LoginScreenState extends State<LoginScreen> {
       child: ElevatedButton(
         onPressed: _isLoading ? null : _handleLogin,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.success,
+          foregroundColor: AppColors.successForeground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.r),
           ),
@@ -369,9 +370,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ? SizedBox(
                 width: 20.w,
                 height: 20.h,
-                child: const CircularProgressIndicator(
+                child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.successForeground),
                 ),
               )
             : Text(

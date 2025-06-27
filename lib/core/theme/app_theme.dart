@@ -19,7 +19,7 @@ class AppTheme {
       textButtonTheme: _textButtonTheme,
       inputDecorationTheme: _inputDecorationTheme,
       dividerTheme: _dividerTheme,
-      scaffoldBackgroundColor: AppColors.backgroundLight,
+      scaffoldBackgroundColor: AppColors.background,
       visualDensity: VisualDensity.adaptivePlatformDensity,
       fontFamily: _getFontFamily(),
     );
@@ -55,33 +55,33 @@ class AppTheme {
   // Color Schemes
   static const ColorScheme _lightColorScheme = ColorScheme.light(
     primary: AppColors.primary,
-    primaryContainer: AppColors.primaryLight,
+    primaryContainer: AppColors.accent,
     secondary: AppColors.secondary,
-    secondaryContainer: AppColors.secondaryLight,
-    surface: AppColors.surfaceLight,
-    background: AppColors.backgroundLight,
-    error: AppColors.error,
-    onPrimary: Colors.white,
-    onSecondary: Colors.white,
-    onSurface: AppColors.textPrimary,
-    onBackground: AppColors.textPrimary,
-    onError: Colors.white,
-    outline: AppColors.borderLight,
+    secondaryContainer: AppColors.accent,
+    surface: AppColors.card,
+    background: AppColors.background,
+    error: AppColors.destructive,
+    onPrimary: AppColors.primaryForeground,
+    onSecondary: AppColors.secondaryForeground,
+    onSurface: AppColors.foreground,
+    onBackground: AppColors.foreground,
+    onError: AppColors.destructiveForeground,
+    outline: AppColors.border,
   );
 
   static const ColorScheme _darkColorScheme = ColorScheme.dark(
-    primary: AppColors.primary,
-    primaryContainer: AppColors.primaryDark,
-    secondary: AppColors.secondary,
-    secondaryContainer: AppColors.secondaryDark,
-    surface: AppColors.surfaceDark,
+    primary: AppColors.primaryDark,
+    primaryContainer: AppColors.accentDark,
+    secondary: AppColors.secondaryDark,
+    secondaryContainer: AppColors.accentDark,
+    surface: AppColors.cardDark,
     background: AppColors.backgroundDark,
-    error: AppColors.error,
-    onPrimary: Colors.black,
-    onSecondary: Colors.white,
-    onSurface: AppColors.textPrimaryDark,
-    onBackground: AppColors.textPrimaryDark,
-    onError: Colors.white,
+    error: AppColors.destructiveDark,
+    onPrimary: AppColors.primaryForegroundDark,
+    onSecondary: AppColors.secondaryForegroundDark,
+    onSurface: AppColors.foregroundDark,
+    onBackground: AppColors.foregroundDark,
+    onError: AppColors.destructiveForegroundDark,
     outline: AppColors.borderDark,
   );
 
@@ -110,13 +110,13 @@ class AppTheme {
   static AppBarTheme get _lightAppBarTheme {
     return AppBarTheme(
       elevation: AppDimensions.appBarElevation,
-      backgroundColor: AppColors.surfaceLight,
-      foregroundColor: AppColors.textPrimary,
+      backgroundColor: AppColors.card,
+      foregroundColor: AppColors.foreground,
       titleTextStyle: AppTextStyles.heading6.copyWith(
-        color: AppColors.textPrimary,
+        color: AppColors.foreground,
       ),
       iconTheme: const IconThemeData(
-        color: AppColors.textPrimary,
+        color: AppColors.foreground,
       ),
     );
   }
@@ -124,13 +124,13 @@ class AppTheme {
   static AppBarTheme get _darkAppBarTheme {
     return AppBarTheme(
       elevation: AppDimensions.appBarElevation,
-      backgroundColor: AppColors.surfaceDark,
-      foregroundColor: AppColors.textPrimaryDark,
+      backgroundColor: AppColors.cardDark,
+      foregroundColor: AppColors.foregroundDark,
       titleTextStyle: AppTextStyles.heading6.copyWith(
-        color: AppColors.textPrimaryDark,
+        color: AppColors.foregroundDark,
       ),
       iconTheme: const IconThemeData(
-        color: AppColors.textPrimaryDark,
+        color: AppColors.foregroundDark,
       ),
     );
   }
@@ -138,12 +138,12 @@ class AppTheme {
   // Card Themes
   static CardThemeData get _lightCardTheme {
     return CardThemeData(
-      color: AppColors.cardLight,
+      color: AppColors.card,
       elevation: AppDimensions.cardElevation,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLG),
         side: BorderSide(
-          color: AppColors.borderLight,
+          color: AppColors.border,
           width: AppDimensions.cardBorderWidth,
         ),
       ),
@@ -168,7 +168,7 @@ class AppTheme {
   static ElevatedButtonThemeData get _elevatedButtonTheme {
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.primaryForeground,
         backgroundColor: AppColors.primary,
         padding: EdgeInsets.symmetric(
           horizontal: AppDimensions.paddingLG,
@@ -230,11 +230,11 @@ class AppTheme {
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
-        borderSide: const BorderSide(color: AppColors.borderLight),
+        borderSide: const BorderSide(color: AppColors.border),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
-        borderSide: const BorderSide(color: AppColors.borderLight),
+        borderSide: const BorderSide(color: AppColors.border),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
@@ -242,15 +242,15 @@ class AppTheme {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
-        borderSide: const BorderSide(color: AppColors.error),
+        borderSide: const BorderSide(color: AppColors.destructive),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMD),
-        borderSide: const BorderSide(color: AppColors.error, width: 2),
+        borderSide: const BorderSide(color: AppColors.destructive, width: 2),
       ),
       labelStyle: AppTextStyles.bodyMedium,
       hintStyle: AppTextStyles.bodyMedium.copyWith(
-        color: AppColors.textSecondary,
+        color: AppColors.mutedForeground,
       ),
     );
   }
@@ -258,7 +258,7 @@ class AppTheme {
   // Divider Theme
   static DividerThemeData get _dividerTheme {
     return const DividerThemeData(
-      color: AppColors.borderLight,
+      color: AppColors.border,
       thickness: 1,
       space: 1,
     );
