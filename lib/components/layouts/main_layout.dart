@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../components.dart';
+import '../../features/dashboard/ui/dashboard_page.dart';
 import '../../features/courses/ui/courses_page.dart';
 import '../../features/exam/ui/exam_page.dart';
 import '../../features/career/ui/career_page.dart';
@@ -87,7 +88,7 @@ class _MainLayoutState extends State<MainLayout> {
       case '/dashboard':
       case '/':
       case '/performance':
-        return const StudentPerformanceContent();
+        return const DashboardPage();
       case '/courses':
         return const CoursesPage();
       case '/exam-overview':

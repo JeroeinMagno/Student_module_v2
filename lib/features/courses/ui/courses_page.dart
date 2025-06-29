@@ -8,7 +8,7 @@ import '../../../core/service_locator.dart';
 import '../../../services/data_service.dart';
 import '../viewmodel/courses_viewmodel.dart';
 import '../model/course.dart';
-import 'course_details_page.dart';
+import 'course_detail_info_page.dart';
 
 class CoursesPage extends StatelessWidget {
   const CoursesPage({super.key});
@@ -285,7 +285,7 @@ class _CoursesPageContentState extends State<_CoursesPageContent> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CourseDetailsPage(course: course),
+                      builder: (context) => CourseDetailInfoPage(course: course),
                     ),
                   );
                 },

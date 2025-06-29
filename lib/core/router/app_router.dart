@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../../components/layouts/main_layout.dart';
-import '../../features/courses/ui/course_detail_page.dart';
+import '../../features/courses/ui/course_detail_route_page.dart';
 import '../../features/auth/ui/login_screen.dart';
 import '../../features/splash/ui/splash_page.dart';
 
@@ -42,7 +42,7 @@ class AppRouter {
             path: ':courseId',
             builder: (context, state) {
               final courseId = state.pathParameters['courseId']!;
-              return CourseDetailPage(courseId: courseId);
+              return CourseDetailRoutePage(courseId: courseId);
             },
           ),
         ],

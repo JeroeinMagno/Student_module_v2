@@ -5,7 +5,7 @@ import '../model/dashboard_model.dart';
 
 /// Dashboard ViewModel using ChangeNotifier for state management
 class DashboardViewModel extends ChangeNotifier {
-  final DataService _dataService = getService<DataService>();
+  final DataService _dataService = serviceLocator<DataService>();
 
   // State variables
   DashboardModel? _dashboard;

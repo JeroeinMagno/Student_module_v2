@@ -4,10 +4,11 @@ import '../../../constants/constants.dart';
 import '../model/course.dart';
 import '../../../presentation/widgets/course/course_widgets.dart';
 
-class CourseDetailsPage extends StatelessWidget {
+/// Course detail info page (takes Course object and displays course information)
+class CourseDetailInfoPage extends StatelessWidget {
   final Course course;
 
-  const CourseDetailsPage({
+  const CourseDetailInfoPage({
     super.key,
     required this.course,
   });

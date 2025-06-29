@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import '../../../constants/constants.dart';
 import '../../../components/components.dart';
 
-/// Course detail page matching original design
-class CourseDetailPage extends StatefulWidget {
+/// Course detail page for routing (takes courseId and fetches course data)
+class CourseDetailRoutePage extends StatefulWidget {
   final String courseId;
 
-  const CourseDetailPage({
+  const CourseDetailRoutePage({
     super.key,
     required this.courseId,
   });
 
   @override
-  State<CourseDetailPage> createState() => _CourseDetailPageState();
+  State<CourseDetailRoutePage> createState() => _CourseDetailRoutePageState();
 }
 
-class _CourseDetailPageState extends State<CourseDetailPage>
+class _CourseDetailRoutePageState extends State<CourseDetailRoutePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
