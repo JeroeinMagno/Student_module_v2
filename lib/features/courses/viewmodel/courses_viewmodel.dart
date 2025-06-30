@@ -82,7 +82,6 @@ class CoursesViewModel extends ChangeNotifier {
       description: data['description']?.toString() ?? 'No description available',
       semester: data['semester']?.toString() ?? 'N/A',
       academicYear: data['academicYear']?.toString() ?? 'N/A',
-      units: data['units'] != null ? data['units'] as int : 3,
       grade: data['grade'] != null ? (data['grade'] as num).toDouble() : null,
       status: data['status']?.toString(),
       schedule: data['schedule']?.toString(),

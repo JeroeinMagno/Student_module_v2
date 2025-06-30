@@ -37,40 +37,21 @@ class CourseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Course Code and Units Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4ADE80).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  child: Text(
-                    course.code,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF4ADE80),
-                      fontSize: 14.sp,
-                    ),
-                  ),
+            // Course Code Row
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFF4ADE80).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              child: Text(
+                course.code,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF4ADE80),
+                  fontSize: 14.sp,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? const Color(0xFF374151) : const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  child: Text(
-                    '${course.units} Units',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12.sp,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             SizedBox(height: 12.h),
             

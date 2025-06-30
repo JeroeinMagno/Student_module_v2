@@ -81,7 +81,6 @@ class _CourseDetailRoutePageState extends State<CourseDetailRoutePage>
                   _buildInfoRow('Course ID', widget.courseId),
                   _buildInfoRow('Course Name', 'Sample Course'),
                   _buildInfoRow('Instructor', 'Dr. Sample'),
-                  _buildInfoRow('Units', '3'),
                   _buildInfoRow('Schedule', 'MWF 10:00-11:00 AM'),
                 ],
               ),

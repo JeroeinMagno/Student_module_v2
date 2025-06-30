@@ -10,7 +10,6 @@ class Course {
   final String description;
   final String semester;
   final String academicYear;
-  final int units;
   final double? grade;
   final String? status;
   final DateTime? enrollmentDate;
@@ -28,7 +27,6 @@ class Course {
     required this.description,
     required this.semester,
     required this.academicYear,
-    required this.units,
     this.grade,
     this.status,
     this.enrollmentDate,
@@ -48,7 +46,6 @@ class Course {
       description: json['description']?.toString() ?? 'No description available',
       semester: json['semester']?.toString() ?? 'N/A',
       academicYear: json['academicYear']?.toString() ?? 'N/A',
-      units: json['units'] as int? ?? 3,
       grade: json['grade'] != null ? (json['grade'] as num).toDouble() : null,
       status: json['status']?.toString(),
       enrollmentDate: json['enrollmentDate'] != null 
@@ -73,7 +70,6 @@ class Course {
       'description': description,
       'semester': semester,
       'academicYear': academicYear,
-      'units': units,
       'grade': grade,
       'status': status,
       'enrollmentDate': enrollmentDate?.toIso8601String(),
@@ -93,7 +89,6 @@ class Course {
     String? description,
     String? semester,
     String? academicYear,
-    int? units,
     double? grade,
     String? status,
     DateTime? enrollmentDate,
@@ -111,7 +106,6 @@ class Course {
       description: description ?? this.description,
       semester: semester ?? this.semester,
       academicYear: academicYear ?? this.academicYear,
-      units: units ?? this.units,
       grade: grade ?? this.grade,
       status: status ?? this.status,
       enrollmentDate: enrollmentDate ?? this.enrollmentDate,

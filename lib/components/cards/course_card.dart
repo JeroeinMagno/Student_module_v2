@@ -23,21 +23,12 @@ class CourseCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Course header
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                course['code'] ?? '',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              AppBadge(
-                text: '${course['credits'] ?? 0} Credits',
-                variant: BadgeVariant.outline,
-              ),
-            ],
+          Text(
+            course['code'] ?? '',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           
           SizedBox(height: 8.h),

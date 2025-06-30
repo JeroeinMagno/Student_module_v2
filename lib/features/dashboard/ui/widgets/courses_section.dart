@@ -68,7 +68,7 @@ class CourseItem extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(course.name),
-      subtitle: Text('${course.code} • ${course.credits} credits'),
+      subtitle: Text(course.code),
       trailing: course.grade != null
           ? Chip(
               label: Text(course.grade!.toStringAsFixed(1)),

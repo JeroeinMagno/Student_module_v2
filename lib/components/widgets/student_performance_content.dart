@@ -67,7 +67,6 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
         'name': course['name'],
         'progress': course['progress'] ?? 0.0,
         'professor': course['instructor'] ?? 'TBD',
-        'units': course['units'] ?? 3,
         'color': _getCourseColor(course['id'] ?? ''),
       }).toList();
 
