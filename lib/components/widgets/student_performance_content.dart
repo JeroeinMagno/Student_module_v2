@@ -176,8 +176,14 @@ class _StudentPerformanceContentState extends State<StudentPerformanceContent> {
             assessmentOverview: _assessmentOverview ?? {},
           ),
           SizedBox(height: AppDimensions.paddingMD),
-          RecentAssessmentsTable(
-            recentAssessments: _recentAssessments,
+          AssessmentCard(
+            assessments: AssessmentDataConverter.convertLegacyData(_recentAssessments),
+            onAssessmentTap: (assessment) {
+              // Handle assessment tap - could navigate to details page
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Tapped: ${assessment.title}')),
+              );
+            },
           ),
           SizedBox(height: AppDimensions.paddingMD),
           GWATrendChart(
