@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:ui';
 import '../../../constants/constants.dart';
 import 'widgets/animated_logo.dart';
 import 'widgets/floating_background_icons.dart';
@@ -74,22 +75,45 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.info,
-              AppColors.primary,
-              AppColors.secondary,
-              AppColors.warning,
-            ],
-            stops: [0.0, 0.3, 0.7, 1.0],
-          ),
-        ),
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
         child: Stack(
           children: [
+            // Background Image
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/university_building.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  print('Error loading image: $error');
+                  // Fallback to gradient if image fails to load
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.info,
+                          AppColors.primary,
+                          AppColors.secondary,
+                          AppColors.warning,
+                        ],
+                        stops: [0.0, 0.3, 0.7, 1.0],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // Blur Effect
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
+                child: Container(),
+              ),
+            ),
+            // Content
             FloatingBackgroundIcons(rotationAnimation: _rotationAnimation),
             Center(
               child: Column(

@@ -4,7 +4,7 @@ import '../../../presentation/widgets/dashboard/dashboard_widgets.dart';
 
 /// Quick test page to verify the assessment card is working with mock data
 class QuickAssessmentTest extends StatelessWidget {
-  const QuickAssessmentTest({Key? key}) : super(key: key);
+  const QuickAssessmentTest({super.key});
 
   @override
   Widget build(BuildContext context) {

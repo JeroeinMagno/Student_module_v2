@@ -21,40 +21,12 @@ class AnimatedLogo extends StatelessWidget {
         builder: (context, child) {
           return Transform.scale(
             scale: pulseAnimation.value,
-            child: Container(
+            child: SizedBox(
               width: 140.w,
               height: 140.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white,
-                    Color(0xFFF8FAFC),
-                  ],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 30,
-                    offset: const Offset(0, 15),
-                    spreadRadius: 5,
-                  ),
-                  BoxShadow(
-                    color: Colors.white.withOpacity(0.1),
-                    blurRadius: 20,
-                    offset: const Offset(0, -5),
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(25.w),
-                child: SvgPicture.asset(
-                  AppAssets.bsuLogo,
-                  fit: BoxFit.contain,
-                ),
+              child: SvgPicture.asset(
+                AppAssets.bsuLogo,
+                fit: BoxFit.contain,
               ),
             ),
           );

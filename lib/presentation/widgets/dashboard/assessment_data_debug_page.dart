@@ -3,7 +3,7 @@ import '../../../presentation/widgets/dashboard/assessment_data_converter.dart';
 
 /// Debug page to test assessment data conversion
 class AssessmentDataDebugPage extends StatelessWidget {
-  const AssessmentDataDebugPage({Key? key}) : super(key: key);
+  const AssessmentDataDebugPage({super.key});
 
   @override
   Widget build(BuildContext context) {

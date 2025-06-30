@@ -10,11 +10,11 @@ class AssessmentListItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   const AssessmentListItem({
-    Key? key,
+    super.key,
     required this.assessment,
     required this.isLast,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

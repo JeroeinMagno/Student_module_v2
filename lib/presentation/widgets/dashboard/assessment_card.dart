@@ -14,12 +14,12 @@ class AssessmentCard extends StatefulWidget {
   final String subtitle;
   
   const AssessmentCard({
-    Key? key,
+    super.key,
     required this.assessments,
     this.onAssessmentTap,
     this.title = 'Recent Assessments',
     this.subtitle = 'Your latest assessment results',
-  }) : super(key: key);
+  });
 
   @override
   State<AssessmentCard> createState() => _AssessmentCardState();

@@ -46,8 +46,15 @@ class SplashLoadingSection extends StatelessWidget {
         'Loading your academic journey...',
         style: TextStyle(
           fontSize: 14.sp,
-          color: Colors.white.withOpacity(0.7),
-          fontWeight: FontWeight.w300,
+          color: Colors.white,
+          fontWeight: FontWeight.w400,
+          shadows: [
+            Shadow(
+              color: Colors.black.withOpacity(0.5),
+              offset: const Offset(0, 1),
+              blurRadius: 4,
+            ),
+          ],
         ),
       ),
     );

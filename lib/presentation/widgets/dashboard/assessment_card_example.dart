@@ -7,7 +7,7 @@ import 'assessment_card.dart';
 
 /// Example page demonstrating the new Assessment Card with toggle functionality
 class AssessmentCardExample extends StatelessWidget {
-  const AssessmentCardExample({Key? key}) : super(key: key);
+  const AssessmentCardExample({super.key});
 
   @override
   Widget build(BuildContext context) {

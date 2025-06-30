@@ -8,10 +8,10 @@ class AssessmentStatusToggle extends StatelessWidget {
   final Function(bool) onToggle;
 
   const AssessmentStatusToggle({
-    Key? key,
+    super.key,
     required this.isCompleted,
     required this.onToggle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

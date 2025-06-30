@@ -17,11 +17,23 @@ class SplashBottomBranding extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Powered by BSU IT Department',
+              'Powered by CAIST Department',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: Colors.white.withOpacity(0.6),
-                fontWeight: FontWeight.w300,
+                color: Colors.white.withOpacity(0.9),
+                fontWeight: FontWeight.w400,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(0, 1),
+                    blurRadius: 3,
+                    color: Colors.black.withOpacity(0.8),
+                  ),
+                  Shadow(
+                    offset: const Offset(0, 0),
+                    blurRadius: 6,
+                    color: Colors.black.withOpacity(0.4),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 4.h),
@@ -29,8 +41,20 @@ class SplashBottomBranding extends StatelessWidget {
               'Version 2.0',
               style: TextStyle(
                 fontSize: 10.sp,
-                color: Colors.white.withOpacity(0.4),
-                fontWeight: FontWeight.w300,
+                color: Colors.white.withOpacity(0.8),
+                fontWeight: FontWeight.w400,
+                shadows: [
+                  Shadow(
+                    offset: const Offset(0, 1),
+                    blurRadius: 2,
+                    color: Colors.black.withOpacity(0.7),
+                  ),
+                  Shadow(
+                    offset: const Offset(0, 0),
+                    blurRadius: 4,
+                    color: Colors.black.withOpacity(0.3),
+                  ),
+                ],
               ),
             ),
           ],

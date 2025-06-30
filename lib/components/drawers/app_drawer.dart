@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../constants/constants.dart';
 
@@ -187,17 +188,12 @@ class _AppDrawerState extends State<AppDrawer> {
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: 40.w,
             height: 40.w,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.school,
-              color: theme.colorScheme.primary,
-              size: 24.sp,
+            child: SvgPicture.asset(
+              AppAssets.bsuLogo,
+              fit: BoxFit.contain,
             ),
           ),
           SizedBox(width: 12.w),
